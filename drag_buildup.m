@@ -1,6 +1,6 @@
 function performance = drag_buildup(performance, aircraft)
 
-performance.c_d0;
+performance.c_d0 = 0;
 
 % Iterate over aircraft lifting surfaces
 for i = 1 : length(aircraft.lifting_surfaces)

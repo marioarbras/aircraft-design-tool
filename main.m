@@ -40,7 +40,7 @@ energy.reserve_fuel = 1.06; % Fuel reserve factor
 
 % Performance
 performance.c_d0 = 0.02; % Aircraft base drag
-performance.ar = 10; % Aspect ratio
+performance.ar = 5; % Aspect ratio
 performance.ld_max = performance.ar + 10; % Maximum L/D ratio
 performance.dl = 700; % Disk loading (N/m^2)
 
