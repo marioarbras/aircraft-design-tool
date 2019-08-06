@@ -1,5 +1,12 @@
+% Aircraft design tool
+%
+% Mario Bras (mbras@uvic.ca) and Ricardo Marques (ricardoemarques@uvic.ca) 2019
+%
+% This file is subject to the license terms in the LICENSE file included in this distribution
+
 function cf = friction_coeff(x, v, a, rr, mm)
-re = reynolds(x, v, rr, mm);
+
+    re = reynolds(x, v, rr, mm);
 if is_laminar(re)
     cf = 1.328 / sqrt(re);
 else
