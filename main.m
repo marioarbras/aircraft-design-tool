@@ -53,6 +53,9 @@ mission.mf_prop = estimate_mf_prop(1.2, 0.04, 1.5, 0.3, 0.1, 0.5, propulsion.con
 mission.mf_struct = 0.24; % Structural mass fraction
 mission.mf_subs = estimate_mf_subs(mission.mf_prop, mission.mf_struct);
 
+data = jsondedode(fileread('project.json'));
+% data.mission.segments(1).type...
+
 %% Mission segments
 % Mission types: 'taxi', 'hover', 'climb', 'vertical_climb', 'acceleration', 'cruise', 'hold', 'combat', 'descent', 'vertical_descent', 'landing', 'drop', 'load'
 % Energy types: 'fuel', 'electric'

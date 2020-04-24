@@ -1,0 +1,67 @@
+{
+    "concept": {
+        "categories": [
+            {
+                "name": "Emissions",
+                "weight": 40
+            },
+            {
+                "name": "Powerplant",
+                "categories": [
+                    {
+                        "name": "Efficiency",
+                        "weight": 10
+                    },
+                    {
+                        "name": "Weight",
+                        "weight": 30
+                    }
+                ]
+            },
+            {
+                "name": "Maintenance",
+                "weight": 10
+            }
+        ]
+    },
+    "performance" : {
+        "aspect_ratio": 10,
+        "lift_to_drag": 20 // "performance.aspect_ratio + 10"
+    },
+    "mission": {
+        "mass_to": 4000,
+        "segments": [
+            {
+                "type": "taxi",
+                "energy":
+                {
+                    "type": "electric"
+                },
+                "time": 600.0,
+                "altitude": 0.0
+            },
+            {
+                "type": "cruise",
+                "energy":
+                {
+                    "type": "electric"
+                },
+                "time": 600.0,
+                "altitude": 0.0
+            },
+            {
+                "type": "cruise",
+                "energy":
+                {
+                    "type": "electric"
+                },
+                "time": 600.0,
+                "altitude": 0.0
+            }
+        ]
+    },
+    "aircraft": {
+        "fuselages": [],
+        "lifting_surfaces": []
+    }
+}
