@@ -70,7 +70,7 @@ Duing a load segment, payload is added to the aircraft.
 
 The mission profile and aircraft configuration need to be defined in a project file. The project file uses [JSON](https://www.json.org/json-en.html) notation. An example project file is as follows (with comments added):
 
-```json
+```json5
 {
     "mission": {
         "mf_struct": 0.24, // Structural mass fraction
