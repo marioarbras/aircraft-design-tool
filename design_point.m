@@ -4,7 +4,7 @@
 %
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
-function [propulsion, performance] = design_point(mission, propulsion, performance, constants)
+function aircraft = design_point(mission, aircraft, constants)
 
 wl = 0:10:10000;
 ptl = 0:0.001:0.1;
@@ -32,46 +32,46 @@ a(2).XLabel.String = 'W/A';
 a(2).YLabel.String = 'W/P';
 a(2).Title.String = 'Vertical Flight Design Point';
 
-k = 1 / pi / performance.ar / constants.e;
+k = 1 / pi / aircraft.performance.aspect_ratio / constants.e;
 
 %% Forward flight constraints
 % EDIT NUMBER/TYPE OF CONSTRAINTS TO PLOT
-r = range(mission.segments(3).density, mission.segments(3).v, performance.c_d0, k, mission.segments(3).propulsion);
-e = endurance(mission.segments(6).density, mission.segments(6).v, performance.c_d0, k, mission.segments(6).propulsion);
-cr = cruise_speed(wl, mission.segments(3).density, mission.segments(3).v, performance.c_d0, k, propulsion.ee_prop, mission.segments(3).propulsion);
-cl1 = climb_angle(wl, mission.segments(8).density(1), performance.c_d0, k, mission.segments(8).angle, propulsion.ee_prop, mission.segments(8).propulsion);
-cl2 = climb_angle(wl, mission.segments(8).density(2), performance.c_d0, k, mission.segments(8).angle, propulsion.ee_prop, mission.segments(8).propulsion);
+r = range(mission.segments{3}.density, mission.segments{3}.velocity, aircraft.performance.c_d0, k, mission.segments{3}.propulsion);
+e = endurance(mission.segments{6}.density, mission.segments{6}.velocity, aircraft.performance.c_d0, k, mission.segments{6}.propulsion);
+cr = cruise_speed(wl, mission.segments{3}.density, mission.segments{3}.velocity, aircraft.performance.c_d0, k, aircraft.propulsion.prop_efficiency, mission.segments{3}.propulsion);
+cl1 = climb_angle(wl, mission.segments{8}.density(1), aircraft.performance.c_d0, k, mission.segments{8}.angle, aircraft.propulsion.prop_efficiency, mission.segments{8}.propulsion);
+cl2 = climb_angle(wl, mission.segments{8}.density(2), aircraft.performance.c_d0, k, mission.segments{8}.angle, aircraft.propulsion.prop_efficiency, mission.segments{8}.propulsion);
 
 figure(f(1));
 plot(a(1), [r r], [ptl(1) ptl(end)], 'DisplayName', 'Range');
 plot(a(1), [e e], [ptl(1) ptl(end)], 'DisplayName', 'Endurance');
 plot(a(1), wl, cr, 'DisplayName', 'Cruise Speed');
-plot(a(1), wl, cl1, 'DisplayName', strcat('Climb Angle @ \rho = ', num2str(mission.segments(8).density(1))));
-plot(a(1), wl, cl2, 'DisplayName', strcat('Climb Angle @ \rho = ', num2str(mission.segments(8).density(2))));
+plot(a(1), wl, cl1, 'DisplayName', strcat('Climb Angle @ \rho = ', num2str(mission.segments{8}.density(1))));
+plot(a(1), wl, cl2, 'DisplayName', strcat('Climb Angle @ \rho = ', num2str(mission.segments{8}.density(2))));
 
 % Pick forward flight wing and power loading
-[performance.wl, performance.pl_fwd] = ginput(1);
-performance.s_ref = mission.weight_to / performance.wl;
-performance.b_ref = sqrt(performance.ar * performance.s_ref);
-performance.c_ref = performance.s_ref / performance.b_ref;
-performance.p_fwd = mission.weight_to / performance.pl_fwd;
+[aircraft.performance.wl, aircraft.performance.pl_fwd] = ginput(1);
+aircraft.performance.area_ref = aircraft.weight_to / aircraft.performance.wl;
+aircraft.performance.b_ref = sqrt(aircraft.performance.aspect_ratio * aircraft.performance.area_ref);
+aircraft.performance.c_ref = aircraft.performance.area_ref / aircraft.performance.b_ref;
+aircraft.propulsion.fwd_power = aircraft.weight_to / aircraft.performance.pl_fwd;
 
 %% Vertical flight constraints
 % EDIT NUMBER/TYPE OF CONSTRAINTS TO PLOT
-h = hover(dl, mission.segments(3).density, propulsion.fm);
-vcl = vertical_climb(dl, mission.segments(2).density(1), propulsion.v_tip, propulsion.ss, propulsion.c_d, propulsion.k_i, mission.segments(2).v);
-tr = transition(performance.wl, dl, mission.segments(3).density, k, performance.c_d0, propulsion.v_tip, propulsion.ss, propulsion.c_d, propulsion.k_i, mission.segments(3).v, propulsion.tt_tilt);
+h = hover(dl, mission.segments{3}.density, aircraft.propulsion.fm);
+vcl = vertical_climb(dl, mission.segments{2}.density(1), aircraft.propulsion.tip_velocity, aircraft.propulsion.ss, aircraft.propulsion.c_d, aircraft.propulsion.k_i, mission.segments{2}.velocity);
+tr = transition(aircraft.performance.wl, dl, mission.segments{3}.density, k, aircraft.performance.c_d0, aircraft.propulsion.tip_velocity, aircraft.propulsion.ss, aircraft.propulsion.c_d, aircraft.propulsion.k_i, mission.segments{3}.velocity, aircraft.propulsion.tt_tilt);
 
 figure(f(2));
-plot(a(2), [dl(1) dl(end)], [performance.pl_fwd performance.pl_fwd], 'k--', 'DisplayName', 'Forward Flight W/P');
+plot(a(2), [dl(1) dl(end)], [aircraft.performance.pl_fwd aircraft.performance.pl_fwd], 'k--', 'DisplayName', 'Forward Flight W/P');
 plot(a(2), dl, h, 'DisplayName', 'Hover');
 plot(a(2), dl, vcl, 'DisplayName', 'Vertical Climb');
-plot(a(2), dl, tr, 'DisplayName', strcat('Transition @ \theta = ', num2str(propulsion.tt_tilt)));
+plot(a(2), dl, tr, 'DisplayName', strcat('Transition @ \theta = ', num2str(aircraft.propulsion.tt_tilt)));
 
 % Pick vertical flight disk and power loading
-[performance.dl, performance.pl_vert] = ginput(1);
-propulsion.a = mission.weight_to / performance.dl;
-propulsion.p_vert = mission.weight_to / performance.pl_vert;
+[aircraft.performance.dl, aircraft.performance.pl_vert] = ginput(1);
+aircraft.propulsion.a = aircraft.weight_to / aircraft.performance.dl;
+aircraft.propulsion.vert_power = aircraft.weight_to / aircraft.performance.pl_vert;
 
 %% Performance functions
 function test = is_jet(propulsion)

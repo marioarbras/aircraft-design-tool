@@ -24,35 +24,108 @@
             }
         ]
     },
-    "performance" : {
-        "aspect_ratio": 10,
-        "lift_to_drag": 20 // "performance.aspect_ratio + 10"
-    },
     "mission": {
-        "mass_to": 4000,
+        "mf_struct": 0.24,
+        "mf_subs": 0.0,
         "segments": [
             {
                 "type": "taxi",
-                "energy":
-                {
+                "energy": {
                     "type": "electric"
                 },
                 "time": 600.0,
                 "altitude": 0.0
             },
             {
-                "type": "cruise",
-                "energy":
-                {
+                "type": "vertical_climb",
+                "energy": {
                     "type": "electric"
                 },
-                "time": 600.0,
-                "altitude": 0.0
+                "velocity": 20.0,
+                "altitude": [ 0.0, 1000.0]
             },
             {
                 "type": "cruise",
-                "energy":
-                {
+                "propulsion": {
+                    "type": "prop"
+                },
+                "energy": {
+                    "type": "electric"
+                },
+                "velocity": 100.0,
+                "range": 5000.0,
+                "altitude": 1000.0
+            },
+            {
+                "type": "descent",
+                "energy": {
+                    "type": "electric"
+                },
+                "velocity": -60.0,
+                "altitude": [ 1000.0, 100.0],
+                "angle": -20.0
+            },
+            {
+                "type": "drop",
+                "mass_drop": 1000.0,
+                "time": 0.0,
+                "altitude": 100.0
+            },
+            {
+                "type": "hold",
+                "propulsion": {
+                    "type": "prop"
+                },
+                "energy": {
+                    "type": "fuel",
+                    "sfc": 4.25e-5
+                },
+                "velocity": 40.0,
+                "time": 300.0,
+                "altitude": 100.0
+            },
+            {
+                "type": "load",
+                "mass_reload": 1000.0,
+                "time": 0.0,
+                "altitude": 100.0
+            },
+            {
+                "type": "climb",
+                "propulsion": {
+                    "type": "prop"
+                },
+                "energy": {
+                    "type": "fuel"
+                },
+                "velocity": 50.0,
+                "altitude": [100.0, 1000.0],
+                "angle": 20.0
+            },
+            {
+                "type": "cruise",
+                "propulsion": {
+                    "type": "jet"
+                },
+                "energy": {
+                    "type": "fuel",
+                    "sfc": 4.25e-5
+                },
+                "velocity": 100.0,
+                "range": 5000.0,
+                "altitude": 1000.0
+            },
+            {
+                "type": "vertical_descent",
+                "energy": {
+                    "type": "electric"
+                },
+                "velocity": -50,
+                "altitude": [1000.0, 0.0]
+            },
+            {
+                "type": "landing",
+                "energy": {
                     "type": "electric"
                 },
                 "time": 600.0,
@@ -61,7 +134,109 @@
         ]
     },
     "aircraft": {
-        "fuselages": [],
-        "lifting_surfaces": []
+        "mass_to": 4000.0,
+        "mass_payload": 680.0,
+        "propulsion": {
+          "gear_efficiency": 0.6,
+          "em_efficiency": 0.9,
+          "esc_efficiency": 0.8,
+          "config": "series",
+          "dist_efficiency": 0.6,
+          "prop_efficiency": 0.8,
+          "k_i": 1.15,
+          "c_d": 0.02,
+          "ss": 0.08,
+          "tip_velocity": 240.1,
+          "fm": 0.6,
+          "a": 10.0,
+          "n": 4.0,
+          "tt_tilt": 40.0,
+          "fwd_power": 500000.0,
+          "vert_power": 500000.0,
+          "mass": 500.0
+        },
+        "energy": {
+            "e_spec_batt": 360000.0,
+            "batt_efficiency": 0.9,
+            "f_usable_batt": 0.9,
+            "reserve_batt": 1.2,
+            "reserve_fuel": 1.06
+        },
+        "performance": {
+            "c_d0": 0.02,
+            "aspect_ratio": 5.0,
+            "ld_max": 15.0,
+            "dl": 700.0,
+            "area_ref": 15.0,
+            "area_wet": 30.0
+        },
+        "fuselages": [
+            {
+                "interf_factor": 1.0,
+                "diameter": 1.0,
+                "length": 4.0,
+                "area_ref": 1.0,
+                "area_wet": 2.0
+            }
+        ],
+        "lifting_surfaces": [
+            {
+                "type": "wing",
+                "interf_factor": 1.0,
+                "aspect_ratio": 5.0,
+                "span": 10.0,
+                "mean_chord": 1.5,
+                "airfoil": {
+                    "type": "naca0012",
+                    "tc_max": 0.15,
+                    "xc_max": 0.3,
+                    "cl_aa": 6.2,
+                    "cl_max": 2.0
+                },
+                "sweep_le": 10.0,
+                "sweep_c4": 15.0,
+                "sweep_tc_max": 20.0,
+                "area_ref": 15.0,
+                "area_wet": 30.0
+            },
+            {
+                "type": "h-tail",
+                "interf_factor": 1.0,
+                "aspect_ratio": 5.0,
+                "span": 2.0,
+                "mean_chord": 0.5,
+                "airfoil": {
+                    "type": "naca0012",
+                    "tc_max": 0.15,
+                    "xc_max": 0.3,
+                    "cl_aa": 6.2,
+                    "cl_max": 2.0
+                },
+                "sweep_le": 10.0,
+                "sweep_c4": 15.0,
+                "sweep_tc_max": 20.0,
+                "area_ref": 1.0,
+                "area_wet": 2.0
+            },
+            {
+                "type": "v-tail",
+                "interf_factor": 1.0,
+                "aspect_ratio": 5.0,
+                "span": 2.0,
+                "mean_chord": 1.0,
+                "airfoil": {
+                    "type": "naca0012",
+                    "tc_max": 0.15,
+                    "xc_max": 0.3,
+                    "cl_aa": 6.2,
+                    "cl_max": 2.0
+                },
+                "sweep_le": 10.0,
+                "sweep_c4": 15.0,
+                "sweep_tc_max": 20.0,
+                "area_ref": 2.0,
+                "area_wet": 4.0
+            }
+        ]
     }
 }
