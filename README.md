@@ -24,7 +24,7 @@ In a taxi segment the aircraft is on the runway waiting to take-off. The engines
 
 **Hover**
 
-In a hover situation, the aircraft maitains altitude and has zero forward velocity.
+In a hover situation, the aircraft maintains altitude and has zero forward velocity.
 
 **Climb**
 

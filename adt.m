@@ -14,10 +14,8 @@ data = load_project(open_filename);
 constants.g = 9.81; % m/s^2
 constants.e = 0.85; % Oswald efficiency number.
 
-% Propulsion
+% Intermediate calculations
 data.aircraft.propulsion.total_efficiency = data.aircraft.propulsion.prop_efficiency * data.aircraft.propulsion.gear_efficiency * data.aircraft.propulsion.em_efficiency * data.aircraft.propulsion.esc_efficiency * data.aircraft.propulsion.dist_efficiency;
-
-% Fixed weights/mass fractions
 data.mission.mf_prop = estimate_mf_prop(1.2, 0.04, 1.5, 0.3, 0.1, 0.5, data.aircraft.propulsion.config);
 data.mission.mf_subs = estimate_mf_subs(data.mission.mf_prop, data.mission.mf_struct);
 
