@@ -1,4 +1,5 @@
 {
+    "$schema": "../schemas/project.json",
     "concept": {
         "categories": [
             {
