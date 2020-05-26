@@ -21,6 +21,7 @@ data.mission.mf_subs = estimate_mf_subs(data.mission.mf_prop, data.mission.mf_st
 
 %% Concept
 data.concept = ahp(data.concept);
+print_concepts(data.concept)
 
 %% Take-off mass estimation
 [data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
