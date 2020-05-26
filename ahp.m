@@ -14,7 +14,7 @@ end
 function [category, designs] = priority_vectors(category, designs)
 [v,d] = eig(category.pairs, 'vector');
 [~,j] = max(d(imag(d) == 0));
-v(:,j) = abs(v(:,j) / norm(v(:,j),1))';
+v(:,j) = abs(v(:,j) / norm(v(:,j),1));
  
 if isfield(category, 'categories')
     if ~iscell(category.categories)
