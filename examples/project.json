@@ -1,27 +1,57 @@
 {
-    "$schema": "../schemas/project.json",
+    "$schema": "https://raw.githubusercontent.com/marioarbras/aircraft-design-tool/master/schemas/project.json",
     "concept": {
-        "categories": [
+        "categories": {
+            "name": "Awesome New Concept",
+            "pairs": [
+                [      1, 7],
+                [0.14286, 1]
+            ],
+            "categories": [
+                {
+                    "name": "Number of Passengers",
+                    "pairs": [
+                        [      1, 0.11111,       9],
+                        [      9,       1, 0.11111],
+                        [0.11111, 0.11111,       1]
+                    ]
+                },
+                {
+                    "name": "Powerplant",
+                    "pairs": [
+                        [1, 0.125],
+                        [8,     1]
+                    ],
+                    "categories": [
+                        {
+                            "name": "Max Power Installed",
+                            "pairs": [
+                                [      1, 0.14286, 9],
+                                [      7,       1, 9],
+                                [0.11111, 0.11111, 1]
+                            ]
+                        },
+                        {
+                            "name": "Pollutant Emissions",
+                            "pairs": [
+                                [   1, 4, 0.11111],
+                                [0.25, 1, 0.11111],
+                                [   9, 9,       1]
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "designs": [
             {
-                "name": "Emissions",
-                "weight": 40
+                "name": "Helicopter"
             },
             {
-                "name": "Powerplant",
-                "categories": [
-                    {
-                        "name": "Efficiency",
-                        "weight": 10
-                    },
-                    {
-                        "name": "Weight",
-                        "weight": 30
-                    }
-                ]
+                "name": "Aircraft"
             },
             {
-                "name": "Maintenance",
-                "weight": 10
+                "name": "Paper Plane"
             }
         ]
     },

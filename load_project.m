@@ -8,6 +8,18 @@ function data = load_project(filename)
 
 data = jsondecode(fileread(filename));
 
+if isfield(data, 'x_schema')
+    data = rmfield(data, 'x_schema');
+end
+
+% if ~iscell(data.concept.categories)
+%     data.concept.categories = num2cell(data.concept.categories);
+% end
+
+if ~iscell(data.concept.designs)
+    data.concept.designs = num2cell(data.concept.designs);
+end
+
 if ~iscell(data.mission.segments)
     data.mission.segments = num2cell(data.mission.segments);
 end

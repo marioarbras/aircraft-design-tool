@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://github.com/marioarbras/aircraft-design-tool/schemas/project.json",
+    "$id": "https://raw.githubusercontent.com/marioarbras/aircraft-design-tool/master/schemas/project.json",
     "title": "Product",
     "description": "A product in the catalog",
     "type": "object",

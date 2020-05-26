@@ -19,6 +19,9 @@ data.aircraft.propulsion.total_efficiency = data.aircraft.propulsion.prop_effici
 data.mission.mf_prop = estimate_mf_prop(1.2, 0.04, 1.5, 0.3, 0.1, 0.5, data.aircraft.propulsion.config);
 data.mission.mf_subs = estimate_mf_subs(data.mission.mf_prop, data.mission.mf_struct);
 
+%% Concept
+data.concept = ahp(data.concept);
+
 %% Take-off mass estimation
 [data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
 
