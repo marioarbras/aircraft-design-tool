@@ -4,8 +4,8 @@
 %
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
-function adt(open_filename, varargin)
-    
+function data = adt(open_filename, varargin)
+
 close all;
 
 data = load_project(open_filename);
