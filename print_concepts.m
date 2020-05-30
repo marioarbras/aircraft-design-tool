@@ -16,7 +16,7 @@ end
 [weights,order] = sort(weights,'descend');
 
 fprintf('<strong>Concepts</strong>\n');
-fprintf("  - <strong>%s: %f</strong> 🥇\n", names{order(1)}, weights(1));
+fprintf("  - <strong>%s: %f</strong>\n", names{order(1)}, weights(1));
 for i = 2 : length(concept.designs)
     fprintf("  - %s: %f\n", names{order(i)}, weights(i));
 end

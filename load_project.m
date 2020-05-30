@@ -8,26 +8,32 @@ function data = load_project(filename)
 
 data = jsondecode(fileread(filename));
 
+% File schema
 if isfield(data, 'x_schema')
     data = rmfield(data, 'x_schema');
 end
 
-% if ~iscell(data.concept.categories)
-%     data.concept.categories = num2cell(data.concept.categories);
-% end
-
-if ~iscell(data.concept.designs)
-    data.concept.designs = num2cell(data.concept.designs);
+% Concept
+if isfield(data, 'concept')
+    if ~iscell(data.concept.designs)
+        data.concept.designs = num2cell(data.concept.designs);
+    end
 end
 
-if ~iscell(data.mission.segments)
-    data.mission.segments = num2cell(data.mission.segments);
+% Mission
+if isfield(data, 'mission')
+    if ~iscell(data.mission.segments)
+        data.mission.segments = num2cell(data.mission.segments);
+    end
 end
 
-if ~iscell(data.aircraft.fuselages)
-    data.aircraft.fuselages = num2cell(data.aircraft.fuselages);
-end
+% Aircraft
+if isfield(data, 'aircraft')
+    if ~iscell(data.aircraft.fuselages)
+        data.aircraft.fuselages = num2cell(data.aircraft.fuselages);
+    end
 
-if ~iscell(data.aircraft.lifting_surfaces)
-    data.aircraft.lifting_surfaces = num2cell(data.aircraft.lifting_surfaces);
+    if ~iscell(data.aircraft.lifting_surfaces)
+        data.aircraft.lifting_surfaces = num2cell(data.aircraft.lifting_surfaces);
+    end
 end
