@@ -222,8 +222,8 @@
             {
                 "name": "Battery #2",
                 "type": "electric",
-                "specific_energy": 360000.0,
-                "efficiency": 0.9
+                "specific_energy": 500000.0,
+                "efficiency": 0.95
             },
             {
                 "name": "Main Fuel Tank",
