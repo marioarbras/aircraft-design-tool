@@ -6,10 +6,7 @@
 
 function save_project(data, filename)
 
-str = jsonencode(data);
-str = strrep(str, ',', sprintf(',\r'));
-str = strrep(str, '[{', sprintf('[\r{\r'));
-str = strrep(str, '}]', sprintf('\r}\r]'));
+str = prettyjson(jsonencode(data));
 
 fid = fopen(filename,'wt');
 fprintf(fid, str);

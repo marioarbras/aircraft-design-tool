@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/marioarbras/aircraft-design-tool/master/schemas/project.json",
     "concept": {
         "categories": {
-            "name": "Awesome New Concept",
+            "name": "New Concept",
             "pairs": [
                 [1, 0.14286],
                 [7,       1]
@@ -56,162 +56,205 @@
         ]
     },
     "mission": {
-        "mf_struct": 0.24,
-        "mf_subs": 0.0,
         "segments": [
             {
                 "type": "taxi",
-                "energy": {
-                    "type": "electric"
-                },
-                "time": 600.0,
+                "energy_source": "Main Battery",
+                "time": 120.0,
                 "altitude": 0.0
             },
             {
                 "type": "vertical_climb",
-                "energy": {
-                    "type": "electric"
-                },
-                "velocity": 20.0,
-                "altitude": [ 0.0, 1000.0]
+                "propulsion_type": "Prop Engine #2",
+                "energy_source": "Main Battery",
+                "velocity": 8.0,
+                "altitude": [0.0, 500.0]
+            },
+            {
+                "type": "hover",
+                "propulsion_type": "Prop Engine #2",
+                "energy_source": "Main Battery",
+                "altitude": 500.0,
+                "time": 10.0
+            },
+            {
+                "type": "transition",
+                "propulsion_type": "Prop Engine #2",
+                "energy_source": "Main Battery",
+                "altitude": 500.0,
+                "transition_angle": 40.0,
+                "time": 120.0,
+                "velocity": [0.0, 40.0]
+            },
+            {
+                "type": "climb",
+                "propulsion_type": "Prop Engine #1",
+                "energy_source": "Main Fuel Tank",
+                "velocity": 40.0,
+                "altitude": [500.0, 2500.0],
+                "angle": 7.2
             },
             {
                 "type": "cruise",
-                "propulsion": {
-                    "type": "prop"
-                },
-                "energy": {
-                    "type": "electric"
-                },
-                "velocity": 100.0,
-                "range": 5000.0,
-                "altitude": 1000.0
+                "propulsion_type": "Prop Engine #1",
+                "energy_source": "Main Battery",
+                "velocity": 50.0,
+                "range": 80000.0,
+                "altitude": 2500.0
             },
             {
                 "type": "descent",
-                "energy": {
-                    "type": "electric"
-                },
-                "velocity": -60.0,
-                "altitude": [ 1000.0, 100.0],
-                "angle": -20.0
+                "energy_source": "Main Battery",
+                "velocity": -40.0,
+                "altitude": [2500.0, 1000.0],
+                "angle": -5.0
             },
             {
                 "type": "drop",
                 "mass_drop": 1000.0,
                 "time": 0.0,
-                "altitude": 100.0
+                "altitude": 1000.0
             },
             {
                 "type": "hold",
-                "propulsion": {
-                    "type": "prop"
-                },
-                "energy": {
-                    "type": "fuel",
-                    "sfc": 4.25e-5
-                },
+                "propulsion_type": "High Efficiency Prop Engine",
+                "energy_source": "Fuel Tank #2",
                 "velocity": 40.0,
                 "time": 300.0,
-                "altitude": 100.0
+                "altitude": 1000.0
             },
             {
                 "type": "load",
                 "mass_reload": 1000.0,
                 "time": 0.0,
-                "altitude": 100.0
-            },
-            {
-                "type": "climb",
-                "propulsion": {
-                    "type": "prop"
-                },
-                "energy": {
-                    "type": "fuel"
-                },
-                "velocity": 50.0,
-                "altitude": [100.0, 1000.0],
-                "angle": 20.0
-            },
-            {
-                "type": "cruise",
-                "propulsion": {
-                    "type": "jet"
-                },
-                "energy": {
-                    "type": "fuel",
-                    "sfc": 4.25e-5
-                },
-                "velocity": 100.0,
-                "range": 5000.0,
                 "altitude": 1000.0
             },
             {
+                "type": "climb",
+                "propulsion_type": "Prop Engine #1",
+                "energy_source": "Main Fuel Tank",
+                "velocity": 40.0,
+                "altitude": [1000.0, 2500.0],
+                "angle": 7.2
+            },
+            {
+                "type": "cruise",
+                "propulsion_type": "Jet Engine",
+                "energy_source": "Main Fuel Tank",
+                "velocity": 50.0,
+                "range": 80000.0,
+                "altitude": 2500.0
+            },
+            {
+                "type": "descent",
+                "energy_source": "Prop Engine #1",
+                "velocity": -6.0,
+                "altitude": [2500.0, 400.0],
+                "angle": -5.0
+            },
+            {
                 "type": "vertical_descent",
-                "energy": {
-                    "type": "electric"
-                },
-                "velocity": -50,
-                "altitude": [1000.0, 0.0]
+                "propulsion_type": "Prop Engine #2",
+                "energy_source": "Battery #2",
+                "velocity": -6.0,
+                "altitude": [400.0, 0.0]
             },
             {
                 "type": "landing",
-                "energy": {
-                    "type": "electric"
-                },
-                "time": 600.0,
+                "energy_source": "Main Battery",
+                "time": 120.0,
                 "altitude": 0.0
             }
         ]
     },
     "aircraft": {
-        "mass_to": 4000.0,
-        "mass_payload": 680.0,
-        "propulsion": {
-          "gear_efficiency": 0.6,
-          "em_efficiency": 0.9,
-          "esc_efficiency": 0.8,
-          "config": "series",
-          "dist_efficiency": 0.6,
-          "prop_efficiency": 0.8,
-          "k_i": 1.15,
-          "c_d": 0.02,
-          "ss": 0.08,
-          "tip_velocity": 240.1,
-          "fm": 0.6,
-          "a": 10.0,
-          "n": 4.0,
-          "tt_tilt": 40.0,
-          "fwd_power": 500000.0,
-          "vert_power": 500000.0,
-          "mass": 500.0
+        "payload": {
+            "mass": 680.0
         },
-        "energy": {
-            "e_spec_batt": 360000.0,
-            "batt_efficiency": 0.9,
-            "f_usable_batt": 0.9,
-            "reserve_batt": 1.2,
-            "reserve_fuel": 1.06
+        "structure": {
+            "mass": 2000.0
         },
-        "performance": {
-            "c_d0": 0.02,
-            "aspect_ratio": 5.0,
-            "ld_max": 15.0,
-            "dl": 700.0,
-            "area_ref": 15.0,
-            "area_wet": 30.0
+        "subsystems": {
+            "mass": 50.0
         },
-        "fuselages": [
+        "propulsion_types": [
             {
+                "name": "High Efficiency Prop Engine",
+                "type": "prop",
+                "efficiency": 0.8,
+                "specific_fuel_consumption": 4.25e-5,
+                "mass": 200.0
+            },
+            {
+                "name": "Prop Engine #1",
+                "type": "prop",
+                "efficiency": 0.6,
+                "specific_fuel_consumption": 4.25e-5,
+                "mass": 200.0
+            },
+            {
+                "name": "Jet Engine",
+                "type": "jet",
+                "specific_fuel_consumption": 4.25e-5,
+                "mass": 300.0
+            },
+            {
+                "name": "Prop Engine #2",
+                "type": "prop",
+                "mass": 500.0,
+                "tip_velocity": 240.1,
+                "efficiency": 0.6,
+                "specific_fuel_consumption": 4.25e-5,
+                "ss": 0.08,
+                "cd": 0.02,
+                "k_i": 1.15,
+                "fm": 0.6
+            }
+        ],
+        "energy_sources": [
+            {
+                "name": "Main Battery",
+                "type": "electric",
+                "specific_energy": 360000.0,
+                "efficiency": 0.9,
+                "reserve": 0.2
+            },
+            {
+                "name": "Battery #2",
+                "type": "electric",
+                "specific_energy": 360000.0,
+                "efficiency": 0.9
+            },
+            {
+                "name": "Main Fuel Tank",
+                "type": "fuel",
+                "specific_energy": 0.123,
+                "reserve": 0.06
+            },
+            {
+                "name": "Fuel Tank #2",
+                "type": "fuel",
+                "specific_energy": 0.123
+            }
+        ],
+        "performance": {
+            "cd_0": 0.02,
+            "aspect_ratio": 5.0,
+            "ld_max": 8.0,
+            "disc_loading": 900
+        },
+        "components": [
+            {
+                "name": "Fuselage",
+                "type": "fuselage",
                 "interf_factor": 1.0,
                 "diameter": 1.0,
                 "length": 4.0,
                 "area_ref": 1.0,
                 "area_wet": 2.0
-            }
-        ],
-        "lifting_surfaces": [
+            },
             {
+                "name": "Main Wing",
                 "type": "wing",
                 "interf_factor": 1.0,
                 "aspect_ratio": 5.0,
@@ -231,7 +274,8 @@
                 "area_wet": 30.0
             },
             {
-                "type": "h-tail",
+                "name": "Horizontal Tail",
+                "type": "wing",
                 "interf_factor": 1.0,
                 "aspect_ratio": 5.0,
                 "span": 2.0,
@@ -250,7 +294,8 @@
                 "area_wet": 2.0
             },
             {
-                "type": "v-tail",
+                "name": "Vertical Tail",
+                "type": "wing",
                 "interf_factor": 1.0,
                 "aspect_ratio": 5.0,
                 "span": 2.0,

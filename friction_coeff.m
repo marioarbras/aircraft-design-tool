@@ -6,7 +6,7 @@
 
 function cf = friction_coeff(x, v, a, rr, mm)
 
-    re = reynolds(x, v, rr, mm);
+re = reynolds(x, v, rr, mm);
 if is_laminar(re)
     cf = 1.328 / sqrt(re);
 else

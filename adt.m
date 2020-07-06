@@ -4,11 +4,9 @@
 %
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
-function data = adt(open_filename, varargin)
-close all;
-
+function data = adt(filename, varargin)
 %% Load project file
-data = load_project(open_filename);
+data = load_project(filename);
 
 %% Concept
 data.concept = ahp(data.concept);
@@ -18,30 +16,27 @@ print_concepts(data.concept)
 constants.g = 9.81; % m/s^2
 constants.e = 0.85; % Oswald efficiency number.
 
-data.aircraft.propulsion.total_efficiency = data.aircraft.propulsion.prop_efficiency * data.aircraft.propulsion.gear_efficiency * data.aircraft.propulsion.em_efficiency * data.aircraft.propulsion.esc_efficiency * data.aircraft.propulsion.dist_efficiency;
-data.mission.mf_prop = estimate_mf_prop(1.2, 0.04, 1.5, 0.3, 0.1, 0.5, data.aircraft.propulsion.config);
-data.mission.mf_subs = estimate_mf_subs(data.mission.mf_prop, data.mission.mf_struct);
-
-% Take-off mass estimation
-[data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
+% Build mission profile
+data.mission = build_mission(data.mission);
 
 %% Plot mission profile
 plot_mission(data.mission);
 
+% Take-off mass estimation
+[data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
+
 %% Design point calculation
 data.aircraft = design_point(data.mission, data.aircraft, constants);
 
-%% Engine selection
-data.mission.mf_prop = data.aircraft.propulsion.mass / data.aircraft.mass_to;
+% Recalculate take-off mass based on updated values from design point
+% [data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
+% data.aircraft = design_point(data.mission, data.aircraft, constants);
 
-%% Lifting surface design
-data.aircraft = lifting_surface(data.aircraft, data.mission.segments{3});
-
-%% Fuselage design
-data.aircraft = fuselage(data.aircraft, data.mission.segments{3});
+%% Lift curve slope
+data.aircraft = lift_slope(data.aircraft, data.mission);
 
 %% Drag buildup
-data.aircraft = drag_buildup(data.aircraft);
+data.aircraft = drag_buildup(data.aircraft, data.mission);
 
 %% Save new project file
 if ~isempty(varargin)

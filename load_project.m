@@ -29,11 +29,15 @@ end
 
 % Aircraft
 if isfield(data, 'aircraft')
-    if ~iscell(data.aircraft.fuselages)
-        data.aircraft.fuselages = num2cell(data.aircraft.fuselages);
+    if ~iscell(data.aircraft.propulsion_types)
+        data.aircraft.propulsion_types = num2cell(data.aircraft.propulsion_types);
+    end
+    
+    if ~iscell(data.aircraft.energy_sources)
+        data.aircraft.energy_sources = num2cell(data.aircraft.energy_sources);
     end
 
-    if ~iscell(data.aircraft.lifting_surfaces)
-        data.aircraft.lifting_surfaces = num2cell(data.aircraft.lifting_surfaces);
+    if ~iscell(data.aircraft.components)
+        data.aircraft.components = num2cell(data.aircraft.components);
     end
 end
