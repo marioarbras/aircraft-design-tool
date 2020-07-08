@@ -228,13 +228,11 @@
             {
                 "name": "Main Fuel Tank",
                 "type": "fuel",
-                "specific_energy": 0.123,
                 "reserve": 0.06
             },
             {
                 "name": "Fuel Tank #2",
-                "type": "fuel",
-                "specific_energy": 0.123
+                "type": "fuel"
             }
         ],
         "performance": {

@@ -171,7 +171,6 @@
             {
                 "name": "Fuel Tank #1",
                 "type": "fuel",
-                "specific_energy": 0.123,
                 "reserve": 0.06
             }
         ],
