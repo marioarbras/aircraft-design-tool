@@ -16,7 +16,7 @@ cv = ones(length(dl), length(pl));
 
 % Configure plot
 colors = {'#0072BD','#D95319','#EDB120','#7E2F8E','#77AC30','#4DBEEE','#A2142F'};
-fig = figure('DeleteFcn', 'doc datacursormode');
+fig = figure();
 yyaxis right;
 legend;
 hold on;
