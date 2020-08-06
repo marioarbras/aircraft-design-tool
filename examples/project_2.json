@@ -186,9 +186,7 @@
                 "type": "fuselage",
                 "interf_factor": 1.0,
                 "diameter": 1.0,
-                "length": 4.0,
-                "area_ref": 1.0,
-                "area_wet": 2.0
+                "length": 4.0
             },
             {
                 "name": "Main Wing",
@@ -206,9 +204,7 @@
                 },
                 "sweep_le": 10.0,
                 "sweep_c4": 15.0,
-                "sweep_tc_max": 20.0,
-                "area_ref": 15.0,
-                "area_wet": 30.0
+                "sweep_tc_max": 20.0
             },
             {
                 "name": "Horizontal Tail",
@@ -226,9 +222,7 @@
                 },
                 "sweep_le": 10.0,
                 "sweep_c4": 15.0,
-                "sweep_tc_max": 20.0,
-                "area_ref": 1.0,
-                "area_wet": 2.0
+                "sweep_tc_max": 20.0
             },
             {
                 "name": "Vertical Tail",
@@ -246,9 +240,7 @@
                 },
                 "sweep_le": 10.0,
                 "sweep_c4": 15.0,
-                "sweep_tc_max": 20.0,
-                "area_ref": 2.0,
-                "area_wet": 4.0
+                "sweep_tc_max": 20.0
             }
         ]
     }

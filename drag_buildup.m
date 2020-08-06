@@ -7,37 +7,53 @@
 function aircraft = drag_buildup(aircraft, mission)
 
 % Iterate over aircraft components
-aircraft.performance.cd_0 = zeros(length(mission.segments), 1);
-for i = 1 : length(mission.segments)
-    for j = 1 : length(aircraft.components)
-        aircraft.components{j}.cd_0 = zeros(length(mission.segments), 1);
-        if is_fuselage(aircraft.components{j})
-            aircraft.components{j}.cd_0(i) = friction_coeff(aircraft.components{j}.length, mission.segments{i}.velocity, mission.segments{i}.speed_sound, mission.segments{i}.density, air_viscosity(mission.segments{i}.temperature)) *...
-                fuselage_form_factor(aircraft.components{j}.length / aircraft.components{j}.diameter) *...
-                aircraft.components{j}.interf_factor *...
-                aircraft.components{j}.area_wet / aircraft.components{j}.area_ref;
-        elseif is_wing(aircraft.components{j})
-            m = mean(mission.segments{i}.velocity) / mean(mission.segments{i}.speed_sound);
-            bb = sqrt(1 - m^2);
-            aircraft.components{j}.cl_aa = aircraft.components{j}.airfoil.cl_aa * aircraft.components{j}.aspect_ratio /...
-                (2 + sqrt(4 + aircraft.components{j}.aspect_ratio^2 * bb^2 * (1 + tand(aircraft.components{j}.sweep_tc_max)^2 / bb^2)));
-
-            aircraft.components{j}.cd_0 = friction_coeff(aircraft.components{j}.mean_chord, mission.segments{i}.velocity, mission.segments{i}.speed_sound, mission.segments{i}.density, air_viscosity(mission.segments{i}.temperature)) *...
-                wing_form_factor(aircraft.components{j}.airfoil.xc_max, aircraft.components{j}.airfoil.tc_max, aircraft.components{j}.sweep_tc_max, m) *...
-                aircraft.components{j}.interf_factor *...
-                aircraft.components{j}.area_wet / aircraft.components{j}.area_ref;
-        end
-
-        aircraft.performance.cd_0 = aircraft.performance.cd_0 + aircraft.components{j}.cd_0 .* aircraft.components{j}.area_ref;
+cd_0 = zeros(length(mission.segments), 1);
+for i = 1 : length(aircraft.components)
+    aircraft.components{i}.cd_0 = zeros(length(mission.segments), 1);
+    if is_fuselage(aircraft.components{i})
+        aircraft.components{i}.area_wet = fuselage_area_wet(aircraft.components{i}.length, aircraft.components{i}.diameter);
+    elseif is_wing(aircraft.components{i})
+        aircraft.components{i}.area_wet = wing_area_wet(aircraft.components{i}.airfoil.tc_max, aircraft.performance.wing_area_ref);
     end
-end
-aircraft.performance.cd_0 = aircraft.performance.cd_0 ./ aircraft.performance.area_ref;
+    
+    for j = 1 : length(mission.segments)
+        if is_fuselage(aircraft.components{i})
+            aircraft.components{i}.cd_0(j) = friction_coeff(aircraft.components{i}.length, mean(mission.segments{j}.velocity), mean(mission.segments{j}.speed_sound), mean(mission.segments{j}.density), air_viscosity(mean(mission.segments{j}.temperature))) *...
+                fuselage_form_factor(aircraft.components{i}.length, aircraft.components{i}.diameter) *...
+                aircraft.components{i}.interf_factor *...
+                aircraft.components{i}.area_wet / aircraft.performance.wing_area_ref;
+        elseif is_wing(aircraft.components{i})
+            m = mean(mission.segments{j}.velocity) / mean(mission.segments{j}.speed_sound);
+            bb = sqrt(1 - m^2);
+            aircraft.components{i}.cl_aa(j) = aircraft.components{i}.airfoil.cl_aa * aircraft.components{i}.aspect_ratio /...
+                (2 + sqrt(4 + aircraft.components{i}.aspect_ratio^2 * bb^2 * (1 + tand(aircraft.components{i}.sweep_tc_max)^2 / bb^2)));
 
-function f = fuselage_form_factor(ld)
+            aircraft.components{i}.cd_0(j) = friction_coeff(aircraft.components{i}.mean_chord, mean(mission.segments{j}.velocity), mean(mission.segments{j}.speed_sound), mean(mission.segments{j}.density), air_viscosity(mean(mission.segments{j}.temperature))) *...
+                wing_form_factor(aircraft.components{i}.airfoil.xc_max, aircraft.components{i}.airfoil.tc_max, aircraft.components{i}.sweep_tc_max, m) *...
+                aircraft.components{i}.interf_factor *...
+                aircraft.components{i}.area_wet / aircraft.performance.wing_area_ref;
+        end
+    end
+    cd_0 = cd_0 + aircraft.components{i}.cd_0;
+end
+aircraft.performance.cd_0 = max(cd_0);
+
+function f = fuselage_form_factor(l, d)
+ld = l / d;
 f = 1 + 60 / ld^3 + ld / 400;
 
 function f = wing_form_factor(xc_max, tc_max, sweep_tc_max, m)
 f = (1 + 0.6 / xc_max * tc_max + 100 * tc_max^4) * 1.34 * m^0.18 * cosd(sweep_tc_max)^0.28;
+
+function a = fuselage_area_wet(l, d)
+a = pi() * d * l + pi() * d^2;
+
+function a = wing_area_wet(tc_max, wing_area_ref)
+if (tc_max > 0.05)
+    a = (1.977 + 0.52 * tc_max) * wing_area_ref;
+else
+    a = 2.003 * wing_area_ref;
+end
 
 function test = is_fuselage(component)
 test = strcmp(component.type, 'fuselage');
