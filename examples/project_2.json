@@ -1,5 +1,4 @@
 {
-    "$schema": "https://raw.githubusercontent.com/marioarbras/aircraft-design-tool/master/schemas/project.json",
     "concept": {
         "categories": {
             "name": "New Concept",

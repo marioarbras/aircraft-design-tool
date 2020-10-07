@@ -159,8 +159,7 @@
             },
             {
                 "type": "cruise",
-                "propulsion_type": "Jet Engine",
-                "energy_source": "Main Fuel Tank",
+                "energy_network": "Fuel Energy Network",
                 "velocity": 50.0,
                 "range": 80000.0,
                 "altitude": 2500.0
@@ -289,27 +288,27 @@
             },
             {
                 "name": "High Efficiency Prop Engine",
-                "type": "prop_engine",
+                "type": "engine",
                 "efficiency": 0.8,
                 "specific_fuel_consumption": 4.25e-5,
                 "mass": 200.0
             },
             {
                 "name": "Prop Engine #1",
-                "type": "prop_engine",
+                "type": "engine",
                 "efficiency": 0.6,
                 "specific_fuel_consumption": 4.25e-5,
                 "mass": 200.0
             },
             {
                 "name": "Jet Engine",
-                "type": "jet_engine",
+                "type": "engine",
                 "specific_fuel_consumption": 4.25e-5,
                 "mass": 300.0
             },
             {
                 "name": "Prop Engine #2",
-                "type": "prop_engine",
+                "type": "engine",
                 "mass": 500.0,
                 "tip_velocity": 240.1,
                 "efficiency": 0.6,
@@ -347,7 +346,7 @@
                 "area": 100
             }
         ],
-        "main_wing": "Main Wing",
+        "main_wing": "Main Wing"
         // "performance": {
         //     // "cd_0": 0.02,
         //     // "aspect_ratio": 5.0,
@@ -355,54 +354,57 @@
         //     // "disc_loading": 900
         // }
     },
-    "energy_network" : [
-        {
-            "name": "Fuel energy network",
-            "network" : [
-                {
-                    "name": "Fuel Tank #1"
-                },
-                {
-                    "name": "Jet engine #1"
-                },
-                {
-                    "name": "Small prop"
-                }
-            ]
-        },
-        {
-            "name": "Electric energy network",
-            "network" : [
-                {
-                    "name": "Battery #2"
-                },
-                {
-                    "name": "Electric motor #1"
-                },
-                {
-                    "name": "Small prop"
-                }
-            ]
-        },
-        {
-            "name": "Hybrid series energy network",
-            "network" : [
-                {
-                    "name": "Fuel Tank #1"
-                },
-                {
-                    "name": "ICE #1"
-                },
-                {
-                    "name": "Generator #1"
-                },
-                {
-                    "name": "Electric motor #1"
-                },
-                {
-                    "name": "Propeller #1"
-                }
-            ]
-        }
-    ]
+    "energy" :
+    {
+        "networks": [
+            {
+                "name": "Fuel energy network",
+                "network" : [
+                    {
+                        "name": "Fuel Tank #1"
+                    },
+                    {
+                        "name": "Engine #1"
+                    },
+                    {
+                        "name": "Prop"
+                    }
+                ]
+            },
+            {
+                "name": "Electric energy network",
+                "network" : [
+                    {
+                        "name": "Battery #2"
+                    },
+                    {
+                        "name": "Electric motor #1"
+                    },
+                    {
+                        "name": "Small prop"
+                    }
+                ]
+            },
+            {
+                "name": "Hybrid series energy network",
+                "network" : [
+                    {
+                        "name": "Fuel Tank #1"
+                    },
+                    {
+                        "name": "ICE #1"
+                    },
+                    {
+                        "name": "Generator #1"
+                    },
+                    {
+                        "name": "Electric motor #1"
+                    },
+                    {
+                        "name": "Propeller #1"
+                    }
+                ]
+            }
+        ]
+    }
 }

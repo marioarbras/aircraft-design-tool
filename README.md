@@ -6,8 +6,12 @@
 - [Project File Structure](#project-file-structure)
   - [Concept Selection](#concept-selection)
   - [Mission Profile](#mission-profile)
+    - [Mission Segments](#mission-segments)
   - [Vehicle Configuration](#vehicle-configuration)
-  
+    - [Vehicle Components](#vehicle-components)
+    - [Global Properties](#global-properties)
+  - [Energy Network](#energy-network)
+
 ## Introduction
 
 Aircraft design tool created for the MECH 475 course at the University of Victoria.
@@ -53,7 +57,7 @@ Computes the drag coefficient for each lifting (wing) and non-lifting (fuselage)
 
 ## Data I/O
 
-Aircraft data is defined in a project file that is read by the `load_project` function of the program. The project file uses [JSON](https://www.json.org/json-en.html) notation. This data is stored as a MATLAB struct within the program and gets transfered around between modules. Optionally, the data can be saved at the end of the program execution.
+Aircraft data is defined in a project file that is read by the `load_project` function of the program. The project file uses [JSON](https://www.json.org/json-en.html) notation. This data is stored as a MATLAB struct within the program and gets transfered around between modules. Optionally, the data can be saved at the end of the program execution by the function `save_project`.
 
 ## Project File Structure
 
@@ -75,13 +79,41 @@ The project is split into three different main groups: _concept selection_, _mis
 
 ### Concept Selection
 
-///////////////////// TODO //////////////////////////////
+The concept selection section implements the analytic hierarchy process (AHP) and lets you specify different design concepts and weight them based on specified criteria (categories). The pair-wise weight between criteria is specified and the designs are ranked based on their calculated relative weight.
+
+```json5
+{
+    "concept": {
+        "categories": {
+            ...
+            "categories": [
+                ...
+            ]
+        }
+    },
+    "designs": [
+        ...
+    ]
+}
+```
 
 ### Mission Profile
 
 A mission profile is built by combining piecewise continuous segments together. Each segment requires a minimum number of parameters to be well defined. Extra parameters can be provided per segment, but will not affect the calculations necessary for that segment.
 
+#### Mission Segments
+
 There is a set of allowed mission segments that can be combined together to form a mission profile.
+
+```json5
+{
+    "mission": {
+        "segments": [
+            ...
+        ]
+    }
+}
+```
 
 **Taxi**
 
@@ -90,8 +122,7 @@ In a taxi segment the aircraft is on the runway waiting to take-off. The engines
 ```json5
 {
     "type": "taxi",
-    "propulsion_type": "Prop Engine #1",
-    "energy_source": "Battery #1",
+    "energy_network": "Fuel-based Energy Network",
     "time": 120.0, // Taxi time (s)
     "altitude": 0.0 // Taxi altitude (m)
 }
@@ -104,8 +135,7 @@ In a hover situation, the aircraft maintains altitude and has zero forward veloc
 ```json5
 {
     "type": "hover",
-    "propulsion_type": "Prop Engine #2",
-    "energy_source": "Main Battery",
+    "energy_network": "Fuel-based Energy Network",
     "time": 10.0, // Taxi time (s)
     "altitude": 500.0 // Taxi altitude (m)
 }
@@ -118,8 +148,7 @@ During a transition segment, the aircraft goes from a vertical climb condition t
 ```json5
 {
     "type": "transition",
-    "propulsion_type": "Prop Engine #2",
-    "energy_source": "Main Battery",
+    "energy_network": "Fuel-based Energy Network",
     "altitude": 500.0, // Transition altitude (m)
     "transition_angle": 40.0, // Transition angle (deg)
     "time": 120.0, // Transition time (s)
@@ -134,8 +163,7 @@ During a climb segment, the aircraft climbs at a constant climb speed and angle.
 ```json5
 {
     "type": "climb",
-    "propulsion_type": "Prop Engine #1",
-    "energy_source": "Main Fuel Tank",
+    "energy_network": "Fuel-based Energy Network",
     "velocity": 40.0, // Climb target velocity (m/s)
     "altitude": [500.0, 2500.0], // Climb altitude range (m)
     "angle": 7.2 // Climb angle (deg)
@@ -149,8 +177,7 @@ During a vertical climb segment, the aircraft climbs at a constant climb speed p
 ```json5
 {
     "type": "vertical_climb",
-    "propulsion_type": "Prop Engine #2",
-    "energy_source": "Main Battery",
+    "energy_network": "Fuel-based Energy Network",
     "velocity": 8.0, // Vertical climb velocity (m/s)
     "altitude": [0.0, 500.0] // Vertical climb altitude range (m)
 }
@@ -163,8 +190,7 @@ In an acceleration segment, the aircraft changes speed while maintainng a consta
 ```json5
 {
     "type": "acceleration",
-    "propulsion_type": "Prop Engine #2",
-    "energy_source": "Main Battery",
+    "energy_network": "Fuel-based Energy Network",
     "velocity": 15.0, // Acceleration target velocity (m/s)
     "altitude": 500 // Acceleration altitude (m)
 }
@@ -177,8 +203,7 @@ In a cruise segment, the aircraft flights at constant altitude and speed for a g
 ```json5
 {
     "type": "cruise",
-    "propulsion_type": "Prop Engine #1",
-    "energy_source": "Main Battery",
+    "energy_network": "Electric-based Energy Network",
     "velocity": 50.0, // Cruise velocity (m/s)
     "range": 80000.0, // Cruise range (m)
     "altitude": 2500.0 // Cruise altitude (m)
@@ -192,8 +217,7 @@ The hold segment is equivalent to a cruise segment, but the hold time is used in
 ```json5
 {
     "type": "hold",
-    "propulsion_type": "High Efficiency Prop Engine",
-    "energy_source": "Fuel Tank #2",
+    "energy_network": "Hybrid Energy Network",
     "velocity": 40.0, // Hold velocity (m/s)
     "time": 300.0, // Loiter time (s)
     "altitude": 1000.0 // Hold altitude (m)
@@ -207,7 +231,7 @@ During a descent segment, the aircraft descends at a constant descent speed and 
 ```json5
 {
     "type": "descent",
-    "energy_source": "Prop Engine #1",
+    "energy_network": "Fuel-based Energy Network",
     "velocity": -6.0, // Descent velocity (m/s)
     "altitude": [2500.0, 400.0], // Descent altitude range (m)
     "angle": -5.0 // Descent angle (deg)
@@ -221,8 +245,7 @@ During a vertical descent segment, the aircraft descends at a constant descent s
 ```json5
 {
     "type": "vertical_descent",
-    "propulsion_type": "Prop Engine #2",
-    "energy_source": "Battery #2",
+    "energy_network": "Fuel-based Energy Network",
     "velocity": -6.0, // Vertical descent velocity (m/s)
     "altitude": [400.0, 0.0] // Vertical descent altitude range (m)
 }
@@ -235,7 +258,7 @@ In a landing segment, the aircraft touches down and decelerates to a complete st
 ```json5
 {
     "type": "landing",
-    "energy_source": "Main Battery",
+    "energy_network": "Fuel-based Energy Network",
     "time": 120.0, // Landing time (s)
     "altitude": 0.0 // Landing altitude (m)
 }
@@ -262,6 +285,16 @@ In a load step segment, payload is added to or dropped from the aircraft instant
 
 A vehicle configuration is built by defining the different components that make up the whole vehicle. Components can be lifting (wing) and non-lifting (fuselage) surfaces, mass points, propulsion systems and energy sources.
 
+```json5
+{
+    "vehicle": {
+        "components": [
+            ...
+        ]
+    }
+}
+```
+
 #### Vehicle Components
 
 **Point Mass**
@@ -273,12 +306,18 @@ A point mass has no volume and simply adds mass to the vehicle.
     "name": "Passengers",
     "type": "point_mass",
     "mass": 10, // Mass value (kg)
+    // "inertia": [
+    //     [1, 2, 3],
+    //     [2, 3, 4],
+    //     [3, 4, 5]
+    // ], // Inertia (kg m^2) - NOT USED AT THE MOMENT
+    // "position": [10, 20, 30] // Position of point mass in the vehicle (m) - NOT USED AT THE MOMENT
 }
 ```
 
 **Fuselage**
 
-A fuselage is a non-lifting surface.
+A fuselage is a non-lifting surface with specified length, diameter, wetted area and mass.
 
 ```json5
 {
@@ -294,11 +333,12 @@ A fuselage is a non-lifting surface.
 
 **Wing**
 
+A wing is a lifting surface with specified geometric properties, airfoil profile and mass properties.
+
 ```json5
 {
     "name": "Main Wing",
     "type": "wing",
-    "tags": ["main_wing"],
     "interf_factor": 1.0,
     "aspect_ratio": 5.0,
     "span": 10.0,
@@ -319,40 +359,172 @@ A fuselage is a non-lifting surface.
 }
 ```
 
-**Prop Engine**
+**Engine**
 
-////////// TODO /////////////////
-
-You can choose what type of powerplant to use in each mission segment. There are two types of powerplants you can choose from based on the stored energy type: *fuel* or *electric* powerplant.
-
-Fuel-based powerplants can also be *jet*- or *propeller*-driven.
-
-**Jet Engine**
-
-**Battery**
-
-**Fuel Tank**
-
-#### Global Properties
-
-Global properties of the aircraft are defined in this section of the project file. For example, the the main wing component of the aircraft must be referenced here.
+An engine is specified by its efficiency, specific fuel consumption and mass. And engine can be part of a larger 
 
 ```json5
 {
-    "main_wing": "Main Wing"
+    "name": "Prop Engine",
+    "type": "engine",
+    "efficiency": 0.8, // Engine efficiency
+    "specific_fuel_consumption": 4.25e-5, // Specific Fuel Consumption (1/s)
+    "mass": 200.0 // Engine mass (kg)
 }
 ```
+
+**Motor**
+
+A motor is specified by its efficiency and mass.
+
+```json5
+{
+    "name": "Electric motor",
+    "type": "motor",
+    "efficiency": 0.9, // Motor efficiency
+    "mass": 200.0 // Motor mass (kg)
+}
+```
+
+**Rotor**
+
+A rotor block needs its radius, solidity ratio and efficiency to be specified.
+
+```json5
+{
+    "name": "Propeller",
+    "type": "propeller",
+    "radius": 10, // Rotor radius (m)
+    "solidity_ratio": 0.5, // Solidity ratio
+    "efficiency": 0.8, // Rotor efficiency (kg)
+}
+```
+
+**Fan**
+
+A fan block needs its radius and efficiency to be specified.
+
+```json5
+{
+    "name": "Rotor",
+    "type": "rotor",
+    "radius": 10, // Fan radius (m)
+    "efficiency": 0.8, // Fan efficiency
+}
+```
+
+**Battery**
+
+A battery block is defined by its mass, efficiency and an optional reserve percentage.
+
+```json5
+{
+    "name": "Battery",
+    "type": "battery",
+    "mass": 10, // Battery mass (kg)
+    "efficiency": 0.8, // Battery efficiency
+    "reserve": 0.2 // Battery reserve (%)
+}
+```
+
+**Fuel Tank**
+
+A fuel tank is defined by an optional reserve percentage.
+
+```json5
+{
+    "name": "Fuel Tank",
+    "type": "fuel_tank",
+    "reserve": 0.2, // Fuel tank reserve (%)
+}
+```
+
+**Efficiency**
+
+An efficinecy block simply multiplies the network by the given efficinecy.
+
+```json5
+{
+    "name": "Efficienncy",
+    "type": "efficiency",
+    "efficiency": 0.8, // Efficiency
+}
+```
+
+#### Global Properties
+
+Global properties of the aircraft must also be defined in the project file. For example, the the main wing component of the aircraft must be referenced in the `aircraft` section of the file, so that the program knows what reference area to use for the calculation of aerodynmic coefficients.
+
+```json5
+{
+    "vehicle": {
+        "components": [
+            ...
+        ],
+        "main_wing": "Main Wing"
+    }
+}
+```
+
 ### Energy Networks
 
+Simple energy networks can be defined by aggregating vehicle powerplant components together. The efficinecy of the energy network is automatically calculated from the individual component efficinecies.
 
+```json5
+{
+    "energy" : {
+        "networks": [
+            ...
+        ]
+    }
+}
+```
 
+A simple fuel-based energy network can be defined like this.
 
+```json5
+{
+    "name": "Fuel-based Energy Network",
+    "network" : [
+        {
+            "name": "Fuel Tank"
+        },
+        {
+            "name": "Engine"
+        },
+        {
+            "name": "Rotor"
+        }
+    ]
+}
+```
 
+The names are references to vehicle components defined in the previous section. The efficiency of the network is calculated from the individual component efficiencies.
 
+A more complicated network could be defined like this
 
-
-
-
+```json5
+{
+    "name": "Hybrid series Energy Network",
+    "network" : [
+        {
+            "name": "Fuel Tank"
+        },
+        {
+            "name": "ICE"
+        },
+        {
+            "name": "Generator"
+        },
+        {
+            "name": "Electric motor"
+        },
+        {
+            "name": "Rotor"
+        }
+    ]
+}
+```
 
 ## Project File
 
