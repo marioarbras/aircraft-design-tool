@@ -1,20 +1,85 @@
 # Aircraft Design Tool
 
+- [Introduction](#introduction)
+- [Modules](#modules)
+- [Data I/O](#data-i/o)
+- [Project File Structure](#project-file-structure)
+  - [Concept Selection](#concept-selection)
+  - [Mission Profile](#mission-profile)
+  - [Vehicle Configuration](#vehicle-configuration)
+  
+## Introduction
+
 Aircraft design tool created for the MECH 475 course at the University of Victoria.
 
 You can use this tool to help you complete the conceptual design of an aircraft. You can define an arbitrarily complex mission profile and assemble an aircraft with an arbitrary number of lifting and non-lifting surfaces.
 
-## Powerplant Types
+With an initial set of assumptions given as input, you can iteratively refine a design of choice and obtain a set of performace parameters as an output.
 
-You can choose what type of powerplant to use in each mission segment. There are two types of powerplants you can choose from based on the stored energy type: *fue*l or *electric* powerplant.
+It follows the course outline very closely, with an initial AHP process for design selection, definition of mission profile, calculation of aircraft weight, design point selection and calculation of power and aerodynamic characteristics.
 
-Fuel-based powerplants can also be *jet*- or *propeller*-driven.
+## Modules
 
-## Mission Profile
+The program includes the following design modules, each one responsible for a single task of the design process.
+
+**`ahp`**
+
+Implements the analytic hierarchy process (AHP) to let you organize and analyze a complex design selection decision, based on specified criteria and relative weights between them.
+
+**`build_mission`**
+
+Given a provided mission profile, calculates time and range of the overall mission and each individual segment.
+
+**`plot_mission`**
+
+Plot the aircraft mission profile.
+
+**`mtow`**
+
+Calculates the Maximum Take-off Weight of the aircraft.
+
+**`design_point`**
+
+Plots the forward flight and vertical flight design spaces and prompts the user to pick a design point.
+
+**`lift_slope`**
+
+Computes lift coefficients for each individual lifting surface of the aircraft.
+
+**`drag_buildup`**
+
+Computes the drag coefficient for each lifting (wing) and non-lifting (fuselage) surfaces of the aircraft and determines the total aircraft drag.
+
+
+## Data I/O
+
+Aircraft data is defined in a project file that is read by the `load_project` function of the program. The project file uses [JSON](https://www.json.org/json-en.html) notation. This data is stored as a MATLAB struct within the program and gets transfered around between modules. Optionally, the data can be saved at the end of the program execution.
+
+## Project File Structure
+
+The project is split into three different main groups: _concept selection_, _mission profile definition_, and _vehicle configuration_.
+
+```json5
+{
+    "concept": {
+        ...
+    },
+    "mission": {
+        ...
+    },
+    "aircraft": {
+        ...
+    }
+}
+```
+
+### Concept Selection
+
+///////////////////// TODO //////////////////////////////
+
+### Mission Profile
 
 A mission profile is built by combining piecewise continuous segments together. Each segment requires a minimum number of parameters to be well defined. Extra parameters can be provided per segment, but will not affect the calculations necessary for that segment.
-
-## Mission Segments
 
 There is a set of allowed mission segments that can be combined together to form a mission profile.
 
@@ -22,49 +87,272 @@ There is a set of allowed mission segments that can be combined together to form
 
 In a taxi segment the aircraft is on the runway waiting to take-off. The engines are on, so energy is being consumed (in the form of fuel or electric energy).
 
+```json5
+{
+    "type": "taxi",
+    "propulsion_type": "Prop Engine #1",
+    "energy_source": "Battery #1",
+    "time": 120.0, // Taxi time (s)
+    "altitude": 0.0 // Taxi altitude (m)
+}
+```
+
 **Hover**
 
 In a hover situation, the aircraft maintains altitude and has zero forward velocity.
+
+```json5
+{
+    "type": "hover",
+    "propulsion_type": "Prop Engine #2",
+    "energy_source": "Main Battery",
+    "time": 10.0, // Taxi time (s)
+    "altitude": 500.0 // Taxi altitude (m)
+}
+```
+
+**Transition**
+
+During a transition segment, the aircraft goes from a vertical climb condition to a forward flight condition at constant altitude.
+
+```json5
+{
+    "type": "transition",
+    "propulsion_type": "Prop Engine #2",
+    "energy_source": "Main Battery",
+    "altitude": 500.0, // Transition altitude (m)
+    "transition_angle": 40.0, // Transition angle (deg)
+    "time": 120.0, // Transition time (s)
+    "velocity": [0.0, 40.0] // Transition velocity range (m/s)
+}
+```
 
 **Climb**
 
 During a climb segment, the aircraft climbs at a constant climb speed and angle.
 
+```json5
+{
+    "type": "climb",
+    "propulsion_type": "Prop Engine #1",
+    "energy_source": "Main Fuel Tank",
+    "velocity": 40.0, // Climb target velocity (m/s)
+    "altitude": [500.0, 2500.0], // Climb altitude range (m)
+    "angle": 7.2 // Climb angle (deg)
+}
+```
+
 **Vertical Climb**
 
 During a vertical climb segment, the aircraft climbs at a constant climb speed perpendicular to the ground.
+
+```json5
+{
+    "type": "vertical_climb",
+    "propulsion_type": "Prop Engine #2",
+    "energy_source": "Main Battery",
+    "velocity": 8.0, // Vertical climb velocity (m/s)
+    "altitude": [0.0, 500.0] // Vertical climb altitude range (m)
+}
+```
 
 **Acceleration**
 
 In an acceleration segment, the aircraft changes speed while maintainng a constant altitude.
 
+```json5
+{
+    "type": "acceleration",
+    "propulsion_type": "Prop Engine #2",
+    "energy_source": "Main Battery",
+    "velocity": 15.0, // Acceleration target velocity (m/s)
+    "altitude": 500 // Acceleration altitude (m)
+}
+```
+
 **Cruise**
 
 In a cruise segment, the aircraft flights at constant altitude and speed for a given range.
+
+```json5
+{
+    "type": "cruise",
+    "propulsion_type": "Prop Engine #1",
+    "energy_source": "Main Battery",
+    "velocity": 50.0, // Cruise velocity (m/s)
+    "range": 80000.0, // Cruise range (m)
+    "altitude": 2500.0 // Cruise altitude (m)
+}
+```
 
 **Hold**
 
 The hold segment is equivalent to a cruise segment, but the hold time is used instead of the cruise range.
 
+```json5
+{
+    "type": "hold",
+    "propulsion_type": "High Efficiency Prop Engine",
+    "energy_source": "Fuel Tank #2",
+    "velocity": 40.0, // Hold velocity (m/s)
+    "time": 300.0, // Loiter time (s)
+    "altitude": 1000.0 // Hold altitude (m)
+}
+```
+
 **Descent**
 
 During a descent segment, the aircraft descends at a constant descent speed and angle.
+
+```json5
+{
+    "type": "descent",
+    "energy_source": "Prop Engine #1",
+    "velocity": -6.0, // Descent velocity (m/s)
+    "altitude": [2500.0, 400.0], // Descent altitude range (m)
+    "angle": -5.0 // Descent angle (deg)
+}
+```
 
 **Vertical Descent**
 
 During a vertical descent segment, the aircraft descends at a constant descent speed perpendicular to the ground.
 
+```json5
+{
+    "type": "vertical_descent",
+    "propulsion_type": "Prop Engine #2",
+    "energy_source": "Battery #2",
+    "velocity": -6.0, // Vertical descent velocity (m/s)
+    "altitude": [400.0, 0.0] // Vertical descent altitude range (m)
+}
+```
+
 **Landing**
 
 In a landing segment, the aircraft touches down and decelerates to a complete stop.
 
-**Drop**
+```json5
+{
+    "type": "landing",
+    "energy_source": "Main Battery",
+    "time": 120.0, // Landing time (s)
+    "altitude": 0.0 // Landing altitude (m)
+}
+```
 
-In a drop segment, payload is dropped from the aircraft.
+**Load step**
 
-**Load**
+In a load step segment, payload is added to or dropped from the aircraft instantaneously. Positive values of load mass are added to the aircraft and negative values are dropped from the aircraft.
 
-Duing a load segment, payload is added to the aircraft.
+```json5
+{
+    "type": "load_step",
+    "mass": 10, // Load mass (kg)
+}
+```
+
+**⚠️ NOTES:**
+
+- Some segments cannot operate using all types of energy sources.
+- Some segments require a range of values for altitude.
+- Units must be consistent throught the definition of the project file.
+
+### Vehicle configuration
+
+A vehicle configuration is built by defining the different components that make up the whole vehicle. Components can be lifting (wing) and non-lifting (fuselage) surfaces, mass points, propulsion systems and energy sources.
+
+#### Vehicle Components
+
+**Point Mass**
+
+A point mass has no volume and simply adds mass to the vehicle.
+
+```json5
+{
+    "name": "Passengers",
+    "type": "point_mass",
+    "mass": 10, // Mass value (kg)
+}
+```
+
+**Fuselage**
+
+A fuselage is a non-lifting surface.
+
+```json5
+{
+    "name": "Fuselage",
+    "type": "fuselage",
+    "interf_factor": 1.0, // Fuselage interference factor
+    "diameter": 1.0, // Fuselage diameter (m)
+    "length": 4.0, // Fuselage length (m)
+    "area": 2.0, // Surface are in contact with flow (wetted area) (m^2)
+    "mass": 1500 // Fuselage mass (kg)
+}
+```
+
+**Wing**
+
+```json5
+{
+    "name": "Main Wing",
+    "type": "wing",
+    "tags": ["main_wing"],
+    "interf_factor": 1.0,
+    "aspect_ratio": 5.0,
+    "span": 10.0,
+    "mean_chord": 1.5,
+    "airfoil": {
+        "type": "naca0012",
+        "tc_max": 0.15,
+        "xc_max": 0.3,
+        "cl_aa": 6.2,
+        "cl_max": 2.0
+    },
+    "sweep_le": 10.0,
+    "sweep_c4": 15.0,
+    "sweep_tc_max": 20.0,
+    "area_ref": 15.0,
+    "area_wet": 30.0,
+    "mass": 400
+}
+```
+
+**Prop Engine**
+
+////////// TODO /////////////////
+
+You can choose what type of powerplant to use in each mission segment. There are two types of powerplants you can choose from based on the stored energy type: *fuel* or *electric* powerplant.
+
+Fuel-based powerplants can also be *jet*- or *propeller*-driven.
+
+**Jet Engine**
+
+**Battery**
+
+**Fuel Tank**
+
+#### Global Properties
+
+Global properties of the aircraft are defined in this section of the project file. For example, the the main wing component of the aircraft must be referenced here.
+
+```json5
+{
+    "main_wing": "Main Wing"
+}
+```
+### Energy Networks
+
+
+
+
+
+
+
+
+
+
 
 ## Project File
 
@@ -288,29 +576,3 @@ The mission profile and aircraft configuration need to be defined in a project f
     }
 }
 ```
-
-## Design Modules
-
-**`mtow`**
-
-Calculates the Maximum Take-off Weight of the aircraft
-
-**`plot_mission`**
-
-Plot the aircraft's mission profile.
-
-**`design_plot`**
-
-Plots the forward flight and vertical flight design spaces and lets the user pick a design point.
-
-**`lifting_surface`**
-
-Computes lift and drag coefficients for each individual lifting surface.
-
-**`fuselage`**
-
-Computes the drag coefficient for each individual fuselage body (non-lifting body).
-
-**`drag_buildup`**
-
-Computes the drag coefficient for the whole aircraft.

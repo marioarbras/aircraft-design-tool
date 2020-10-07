@@ -5,6 +5,9 @@
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
 function [mission, aircraft] = mtow(mission, aircraft, constants)
+
+    % TODO: Replace initial mass guess of 0 by sum of fixed masses
+
 mass_to = fsolve(@(x)mtow_error(x, mission, aircraft, constants), 0, optimoptions('fsolve', 'Display','none'));
 [~, mission, aircraft] = mtow_error(mass_to, mission, aircraft, constants);
 
@@ -112,7 +115,7 @@ for i = 1 : length(mission.segments)
         mach = mission.segments{i}.velocity / mission.segments{i}.a;
         ei = find_energy_source_index(aircraft, mission.segments{i}.energy_source);
         if is_fuel(aircraft.energy_sources{ei})
-            if i > 1 && mach == mission.segment{i - 1}.velocity / mission.segments{i - 1}.a
+            if i > 1 && mach == mission.segments{i - 1}.velocity / mission.segments{i - 1}.a
                 mf_fuel = 0;
             elseif mach < 1
                 mf_fuel = 1 - (1 - 0.04 * mach);
