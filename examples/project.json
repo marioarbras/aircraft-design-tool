@@ -58,25 +58,25 @@
         "segments": [
             {
                 "type": "taxi",
-                "energy_network": "Electric Energy Network",
+                "energy_network": "Electric Energy Network @ forward flight",
                 "time": 120.0,
                 "altitude": 0.0
             },
             {
                 "type": "vertical_climb",
-                "energy_network": "Electric Energy Network",
+                "energy_network": "Electric Energy Network @ vertical flight",
                 "velocity": 8.0,
                 "altitude": [0.0, 500.0]
             },
             {
                 "type": "hover",
-                "energy_network": "Electric Energy Network",
+                "energy_network": "Electric Energy Network @ vertical flight",
                 "altitude": 500.0,
                 "time": 10.0
             },
             {
                 "type": "transition",
-                "energy_network": "Electric Energy Network",
+                "energy_network": "Electric Energy Network @ vertical flight",
                 "altitude": 500.0,
                 "transition_angle": 40.0,
                 "time": 120.0,
@@ -98,14 +98,14 @@
             },
             {
                 "type": "descent",
-                "energy_network": "Electric Energy Network",
+                "energy_network": "Electric Energy Network @ forward flight",
                 "velocity": -40.0,
                 "altitude": [2500.0, 1000.0],
                 "angle": -5.0
             },
             {
                 "type": "load_step",
-                "mass": -1000.0,
+                "mass": -100.0,
                 "time": 0.0,
                 "altitude": 1000.0
             },
@@ -118,7 +118,7 @@
             },
             {
                 "type": "load_step",
-                "mass": 1000.0,
+                "mass": 100.0,
                 "time": 0.0,
                 "altitude": 1000.0
             },
@@ -145,7 +145,7 @@
             },
             {
                 "type": "vertical_descent",
-                "energy_network": "Electric Energy Network",
+                "energy_network": "Electric Energy Network @ vertical flight",
                 "velocity": -6.0,
                 "altitude": [400.0, 0.0]
             },
@@ -162,12 +162,12 @@
             {
                 "name": "Crew",
                 "type": "mass.point",
-                "mass": 10
+                "mass": 200
             },
             {
                 "name": "Passengers",
                 "type": "mass.point",
-                "mass": 100
+                "mass": 500
             },
             {
                 "name": "Avionics",
@@ -187,7 +187,7 @@
                 "length": 4.0,
                 "area_ref": 1.0,
                 "area_wet": 2.0,
-                "mass": 1500
+                "mass": 800
             },
             {
                 "name": "Main Wing",
@@ -208,7 +208,7 @@
                 "sweep_tc_max": 20.0,
                 "area_ref": 15.0,
                 "area_wet": 30.0,
-                "mass": 400
+                "mass": 200
             },
             {
                 "name": "Horizontal Tail",
@@ -256,21 +256,18 @@
                 "name": "Turboshaft",
                 "type": "engine.prop",
                 "efficiency": 0.8,
-                "brake_specific_fuel_consumption": 0.0000425,
-                "mass": 200
+                "mass": 100
             },
             {
                 "name": "4-stroke Piston Engine",
                 "type": "engine.prop",
                 "efficiency": 0.8,
-                "brake_specific_fuel_consumption": 0.0000425,
-                "mass": 200
+                "mass": 100
             },
             {
                 "name": "Jet Engine",
                 "type": "engine.jet",
-                "specific_fuel_consumption": 0.0000425,
-                "mass": 300
+                "mass": 200
             },
             {
                 "name": "Battery",
@@ -297,7 +294,7 @@
                 "base_drag_coefficient": 0.02,
                 "tip_velocity": 240.1,
                 "efficiency": 0.6,
-                "mass": 10
+                "mass": 20
             },
             {
                 "name": "Propeller",
@@ -319,14 +316,14 @@
                 "name": "Generator",
                 "type": "generator",
                 "efficiency": 0.96,
-                "mass": 20
+                "mass": 50
             },
             {
                 "name": "Electric Motor",
                 "type": "motor",
                 "number": 2,
                 "efficiency": 0.97,
-                "mass": 20
+                "mass": 50
             }
         ]
     },
@@ -337,17 +334,17 @@
                 "name": "Fuel Energy Network @ climb",
                 "layout": [
                     {
-                        "name": "Fuel Tank",
-                        "specific_fuel_consumption": 4.25e-5
+                        "name": "Fuel Tank"
                     },
                     {
-                        "name": "Jet Engine"
+                        "name": "4-stroke Piston Engine",
+                        "brake_specific_fuel_consumption": 4.25e-5
                     },
                     {
                         "name": "Gearbox"
                     },
                     {
-                        "name": "Rotor"
+                        "name": "Propeller"
                     }
                 ]
             },
@@ -355,17 +352,11 @@
                 "name": "Fuel Energy Network @ cruise",
                 "layout": [
                     {
-                        "name": "Fuel Tank",
+                        "name": "Fuel Tank"
+                    },
+                    {
+                        "name": "Jet Engine",
                         "specific_fuel_consumption": 3.4e-5
-                    },
-                    {
-                        "name": "Jet Engine"
-                    },
-                    {
-                        "name": "Gearbox"
-                    },
-                    {
-                        "name": "Rotor"
                     }
                 ]
             },
@@ -373,17 +364,17 @@
                 "name": "Fuel Energy Network @ hover",
                 "layout": [
                     {
-                        "name": "Fuel Tank",
-                        "specific_fuel_consumption": 2.55e-5
+                        "name": "Fuel Tank"
                     },
                     {
-                        "name": "Jet Engine"
+                        "name": "4-stroke Piston Engine",
+                        "brake_specific_fuel_consumption": 2.55e-5
                     },
                     {
                         "name": "Gearbox"
                     },
                     {
-                        "name": "Rotor"
+                        "name": "Propeller"
                     }
                 ]
             },
@@ -391,22 +382,36 @@
                 "name": "Fuel Energy Network @ idle",
                 "layout": [
                     {
-                        "name": "Fuel Tank",
-                        "specific_fuel_consumption": 4.25e-6
+                        "name": "Fuel Tank"
                     },
                     {
-                        "name": "Jet Engine"
+                        "name": "4-stroke Piston Engine",
+                        "brake_specific_fuel_consumption": 4.25e-6
                     },
                     {
                         "name": "Gearbox"
                     },
                     {
-                        "name": "Rotor"
+                        "name": "Propeller"
                     }
                 ]
             },
             {
-                "name": "Electric Energy Network",
+                "name": "Electric Energy Network @ forward flight",
+                "layout": [
+                    {
+                        "name": "Battery"
+                    },
+                    {
+                        "name": "Electric Motor"
+                    },
+                    {
+                        "name": "Propeller"
+                    }
+                ]
+            },
+            {
+                "name": "Electric Energy Network @ vertical flight",
                 "layout": [
                     {
                         "name": "Battery"

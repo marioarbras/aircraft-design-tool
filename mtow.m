@@ -87,8 +87,8 @@ for i = 1 : length(network.layout)
         if strcmp(network.layout{i}.name, vehicle.components{j}.name)
             e = vehicle.components{j};
             fields = fieldnames(network.layout{i});
-            for field = fields
-                e.(field{1}) = network.layout{i}.(field{1});
+            for k = 1 : length(fields)
+                e.(fields{k}) = network.layout{i}.(fields{k});
             end
             elems = [elems e];
             ids = [ids j];
@@ -96,6 +96,9 @@ for i = 1 : length(network.layout)
         end
     end
 end
+
+function mf_fuel = breguet(range, velocity, sfc, ld)
+mf_fuel = 1 - exp(-range * sfc / velocity / ld);
 
 function a = area(rotor)
 a = pi() * rotor.radius^2;
@@ -232,7 +235,13 @@ engine = find_by_type(network, 'engine');
 ld = get_ld(vehicle, segment, engine);
 
 if is_type(source, 'energy.fuel')
-    mf_fuel = 1 - exp(-segment.range * engine.specific_fuel_consumption / segment.velocity / ld);
+    if is_type(engine, 'engine.jet')
+        mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
+    elseif is_type(engine, 'engine.prop')
+        prop = find_by_type(network, 'driver.propeller');
+        sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
+        mf_fuel = breguet(segment.range, segment.velocity, sfc, ld);
+    end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - source.mass;
 elseif is_type(source, 'energy.electric')
@@ -251,7 +260,13 @@ engine = find_by_type(network, 'engine');
 ld = get_ld(vehicle, segment, engine);
 
 if is_type(source, 'energy.fuel')
-    mf_fuel = 1 - exp(-segment.time * engine.specific_fuel_consumption / ld);
+    if is_type(engine, 'engine.jet')
+        mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
+    elseif is_type(engine, 'engine.prop')
+        prop = find_by_type(network, 'driver.propeller');
+        sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
+        mf_fuel = breguet(segment.range, segment.velocity, sfc, ld);
+    end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - source.mass;
 elseif is_type(source, 'energy.electric')
