@@ -384,13 +384,5 @@ for i = 1 : length(mission.segments)
     % mission.range = mission.range + mission.segments{i}.range;
 end
 
-% Accumulate component masses
-mass = 0;
-for i = 1 : length(vehicle.components)
-    mass = mass + vehicle.components{i}.mass;
-    if isfield(vehicle.components{i}, 'reserve')
-        mass = mass + vehicle.components{i}.mass * vehicle.components{i}.reserve;
-    end
-end
-
-error = vehicle.mass - mass;
+% Accumulate component masses and calculate error
+error = vehicle.mass - sum_masses(vehicle);

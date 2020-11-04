@@ -304,7 +304,7 @@ A point mass has no volume and simply adds mass to the vehicle.
 ```json5
 {
     "name": "Passengers",
-    "type": "point_mass",
+    "type": "mass.point",
     "mass": 10, // Mass value (kg)
     // "inertia": [
     //     [1, 2, 3],
@@ -326,7 +326,6 @@ A fuselage is a non-lifting surface with specified length, diameter, wetted area
     "interf_factor": 1.0, // Fuselage interference factor
     "diameter": 1.0, // Fuselage diameter (m)
     "length": 4.0, // Fuselage length (m)
-    "area": 2.0, // Surface are in contact with flow (wetted area) (m^2)
     "mass": 1500 // Fuselage mass (kg)
 }
 ```
@@ -338,7 +337,7 @@ A wing is a lifting surface with specified geometric properties, airfoil profile
 ```json5
 {
     "name": "Main Wing",
-    "type": "wing",
+    "type": "wing.main", // "wing.vtail" // "wing.htail"
     "interf_factor": 1.0,
     "aspect_ratio": 5.0,
     "span": 10.0,
@@ -353,22 +352,30 @@ A wing is a lifting surface with specified geometric properties, airfoil profile
     "sweep_le": 10.0,
     "sweep_c4": 15.0,
     "sweep_tc_max": 20.0,
-    "area_ref": 15.0,
-    "area_wet": 30.0,
     "mass": 400
 }
 ```
 
 **Engine**
 
-An engine is specified by its efficiency, specific fuel consumption and mass. And engine can be part of a larger 
+An engine is specified by its efficiency, specific fuel consumption and mass. An engine can be part of a larger energy network
 
 ```json5
 {
     "name": "Prop Engine",
-    "type": "engine",
+    "type": "engine.prop",
     "efficiency": 0.8, // Engine efficiency
-    "specific_fuel_consumption": 4.25e-5, // Specific Fuel Consumption (1/s)
+    "brake_specific_fuel_consumption": 4.25e-5, // Brake specific Fuel Consumption (Wfuel/P/s)
+    "mass": 200.0 // Engine mass (kg)
+}
+```
+
+```json5
+{
+    "name": "Jet Engine",
+    "type": "engine.jet",
+    "efficiency": 0.8, // Engine efficiency
+    "specific_fuel_consumption": 4.25e-5, // Specific Fuel Consumption (Wfuel/T/s)
     "mass": 200.0 // Engine mass (kg)
 }
 ```
@@ -393,7 +400,7 @@ A rotor block needs its radius, solidity ratio and efficiency to be specified.
 ```json5
 {
     "name": "Propeller",
-    "type": "propeller",
+    "type": "driver.propeller",
     "radius": 10, // Rotor radius (m)
     "solidity_ratio": 0.5, // Solidity ratio
     "efficiency": 0.8, // Rotor efficiency (kg)
@@ -407,7 +414,7 @@ A fan block needs its radius and efficiency to be specified.
 ```json5
 {
     "name": "Rotor",
-    "type": "rotor",
+    "type": "driver.rotor",
     "radius": 10, // Fan radius (m)
     "efficiency": 0.8, // Fan efficiency
 }
@@ -420,7 +427,7 @@ A battery block is defined by its mass, efficiency and an optional reserve perce
 ```json5
 {
     "name": "Battery",
-    "type": "battery",
+    "type": "energy.electric",
     "mass": 10, // Battery mass (kg)
     "efficiency": 0.8, // Battery efficiency
     "reserve": 0.2 // Battery reserve (%)
@@ -434,7 +441,7 @@ A fuel energy source is defined by an optional reserve percentage.
 ```json5
 {
     "name": "Fuel Tank",
-    "type": "fuel",
+    "type": "energy.fuel",
     "reserve": 0.2, // Fuel tank reserve (%)
 }
 ```
@@ -453,7 +460,7 @@ An efficinecy block simply multiplies the network by the given efficinecy.
 
 #### Global Properties
 
-Global properties of the aircraft must also be defined in the project file. For example, the the main wing component of the aircraft must be referenced in the `aircraft` section of the file, so that the program knows what reference area to use for the calculation of aerodynmic coefficients.
+Global properties of the aircraft must also be defined in the project file. For example, the the main wing component of the aircraft must be referenced in the `vehicle` section of the file, so that the program knows what reference area to use for the calculation of aerodynmic coefficients.
 
 ```json5
 {
@@ -485,12 +492,13 @@ A simple fuel-based energy network can be defined like this.
 ```json5
 {
     "name": "Fuel-based Energy Network",
-    "network" : [
+    "layout" : [
         {
             "name": "Fuel Tank"
         },
         {
-            "name": "Engine"
+            "name": "Prop Engine",
+            "brake_specific_fuel_consumption": 4.25e-6
         },
         {
             "name": "Rotor"
@@ -506,7 +514,7 @@ A more complicated network could be defined like this
 ```json5
 {
     "name": "Hybrid series Energy Network",
-    "network" : [
+    "layout" : [
         {
             "name": "Fuel Tank"
         },
