@@ -27,17 +27,21 @@ if isfield(data, 'mission')
     end
 end
 
-% Aircraft
-if isfield(data, 'aircraft')
-    if ~iscell(data.aircraft.propulsion_types)
-        data.aircraft.propulsion_types = num2cell(data.aircraft.propulsion_types);
+% Vehicle
+if isfield(data, 'vehicle')
+    if ~iscell(data.vehicle.components)
+        data.vehicle.components = num2cell(data.vehicle.components);
     end
-    
-    if ~iscell(data.aircraft.energy_sources)
-        data.aircraft.energy_sources = num2cell(data.aircraft.energy_sources);
-    end
+end
 
-    if ~iscell(data.aircraft.components)
-        data.aircraft.components = num2cell(data.aircraft.components);
+% Energy
+if isfield(data, 'energy')
+    if ~iscell(data.energy.networks)
+        data.energy.networks = num2cell(data.energy.networks);
+        for i = 1 : length(data.energy.networks)
+            if ~iscell(data.energy.networks{i}.layout)
+                data.energy.networks{i}.layout = num2cell(data.energy.networks{i}.layout);
+            end
+        end
     end
 end

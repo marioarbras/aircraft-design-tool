@@ -7,15 +7,18 @@
 function aircraft = drag_buildup(aircraft, mission)
 
 % Iterate over aircraft components
-cd_0 = zeros(length(mission.segments), 1);
 for i = 1 : length(aircraft.components)
-    aircraft.components{i}.cd_0 = zeros(length(mission.segments), 1);
     if is_fuselage(aircraft.components{i})
         aircraft.components{i}.area_wet = fuselage_area_wet(aircraft.components{i}.length, aircraft.components{i}.diameter);
     elseif is_wing(aircraft.components{i})
-        aircraft.components{i}.area_wet = wing_area_wet(aircraft.components{i}.airfoil.tc_max, aircraft.performance.wing_area_ref);
+        aircraft.components{i}.area_ref = aircraft.components{i}.span * aircraft.components{i}.mean_chord;
+        aircraft.components{i}.area_wet = wing_area_wet(aircraft.components{i}.airfoil.tc_max, aircraft.components{i}.area_ref);
     end
-    
+end
+
+cd_0 = zeros(length(mission.segments), 1);
+for i = 1 : length(aircraft.components)
+    aircraft.components{i}.cd_0 = zeros(length(mission.segments), 1);
     for j = 1 : length(mission.segments)
         if is_fuselage(aircraft.components{i})
             aircraft.components{i}.cd_0(j) = friction_coeff(aircraft.components{i}.length, mean(mission.segments{j}.velocity), mean(mission.segments{j}.speed_sound), mean(mission.segments{j}.density), air_viscosity(mean(mission.segments{j}.temperature))) *...

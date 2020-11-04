@@ -53,13 +53,14 @@ for i = 1 : length(mission.segments)
         plot([x, x + mission.segments{i}.range], [mission.segments{i}.altitude(1), mission.segments{i}.altitude(2)], 'DisplayName', ['Vertical Descent (', num2str(i-1), '-', num2str(i), ')']);
         text(x + mission.segments{i}.range, mission.segments{i}.altitude(2), num2str(i));
         x = x + mission.segments{i}.range;
-    elseif strcmp(mission.segments{i}.type, 'drop') % Drop segment
+    elseif strcmp(mission.segments{i}.type, 'load_step') % Load step segment
+        if mission.segments{i}.mass > 0
+            arrow = '\uparrow';
+        else
+            arrow =  '\downarrow';
+        end
         plot([x, x + 500], [mission.segments{i}.altitude, mission.segments{i}.altitude], 'DisplayName', ['Drop (', num2str(i-1), '-', num2str(i), ')']);
-        text([x + 250, x + 500], [mission.segments{i}.altitude - 10, mission.segments{i}.altitude], {'\downarrow', num2str(i)});
-        x = x + 500;
-    elseif strcmp(mission.segments{i}.type, 'load') % Load segment
-        plot([x, x + 500], [mission.segments{i}.altitude, mission.segments{i}.altitude], 'DisplayName', ['Load (', num2str(i-1), '-', num2str(i), ')']);
-        text([x + 250, x + 500], [mission.segments{i}.altitude - 10, mission.segments{i}.altitude], {'\uparrow', num2str(i)});
+        text([x + 250, x + 500], [mission.segments{i}.altitude - 10, mission.segments{i}.altitude], {arrow, num2str(i)});
         x = x + 500;
     elseif strcmp(mission.segments{i}.type, 'landing') % Landing segment
         plot([x, x + 500], [mission.segments{i}.altitude, mission.segments{i}.altitude], 'DisplayName', ['Landing (', num2str(i-1), '-', num2str(i), ')']);

@@ -427,14 +427,14 @@ A battery block is defined by its mass, efficiency and an optional reserve perce
 }
 ```
 
-**Fuel Tank**
+**Fuel**
 
-A fuel tank is defined by an optional reserve percentage.
+A fuel energy source is defined by an optional reserve percentage.
 
 ```json5
 {
     "name": "Fuel Tank",
-    "type": "fuel_tank",
+    "type": "fuel",
     "reserve": 0.2, // Fuel tank reserve (%)
 }
 ```

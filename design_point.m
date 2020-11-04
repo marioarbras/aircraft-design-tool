@@ -4,7 +4,8 @@
 %
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
-function aircraft = design_point(mission, aircraft, constants)
+function aircraft = design_point(mission, aircraft)
+global constants;
 
 wl = 0:5:1000;
 dl = 0:5:10000;

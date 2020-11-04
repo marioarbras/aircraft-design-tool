@@ -5,16 +5,17 @@
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
 function data = adt(filename, varargin)
+%% Constants
+global constants;
+constants.g = 9.81; % m/s^2
+constants.e = 0.85; % Oswald efficiency number.
+
 %% Load project file
 data = load_project(filename);
 
 %% Concept
 data.concept = ahp(data.concept);
 print_concepts(data.concept)
-
-%% Constants and intermediate calculations
-constants.g = 9.81; % m/s^2
-constants.e = 0.85; % Oswald efficiency number.
 
 % Build mission profile
 data.mission = build_mission(data.mission);
@@ -23,20 +24,20 @@ data.mission = build_mission(data.mission);
 plot_mission(data.mission);
 
 % Take-off mass estimation
-[data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
+[data.mission, data.vehicle] = mtow(data.mission, data.vehicle, data.energy);
 
 %% Design point calculation
-data.aircraft = design_point(data.mission, data.aircraft, constants);
+data.vehicle = design_point(data.mission, data.vehicle, data.energy);
 
 % Recalculate take-off mass based on updated values from design point
-% [data.mission, data.aircraft] = mtow(data.mission, data.aircraft, constants);
-% data.aircraft = design_point(data.mission, data.aircraft, constants);
+% [data.mission, data.vehicle] = mtow(data.mission, data.vehicle, data.energy);
+% data.vehicle = design_point(data.mission, data.vehicle, data.energy);
 
 %% Lift curve slope
-data.aircraft = lift_slope(data.aircraft, data.mission);
+data.vehicle = lift_slope(data.vehicle, data.mission);
 
 %% Drag buildup
-data.aircraft = drag_buildup(data.aircraft, data.mission);
+data.vehicle = drag_buildup(data.vehicle, data.mission);
 
 %% Save new project file
 if ~isempty(varargin)
