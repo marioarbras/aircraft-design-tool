@@ -83,7 +83,7 @@ global constants;
 [source, source_id] = find_by_type(network, 'energy');
 
 if is_type(source, 'energy.fuel')
-    errordlg('Not available'); % NOT AVAILABLE
+    errordlg('Hover not available for fuel energy types'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
     rotor = find_by_type(network, 'driver.rotor');
@@ -108,7 +108,7 @@ if is_type(source, 'energy.fuel')
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - source.mass;
 elseif is_type(source, 'energy.electric')
-    errordlg('Not available'); % NOT AVAILABLE
+    errordlg('Climb not available for electric energy types'); % NOT AVAILABLE
     return;
 end
 
@@ -119,7 +119,7 @@ global constants;
 [source, source_id] = find_by_type(network, 'energy');
 
 if is_type(source, 'energy.fuel')
-    errordlg('Not available'); % NOT AVAILABLE
+    errordlg('Vertical climb not available for fuel energy types'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
     rotor = find_by_type(network, 'driver.rotor');
@@ -149,7 +149,7 @@ if is_type(source, 'energy.fuel')
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - source.mass;
 elseif is_type(source, 'energy.electric')
-    errordlg('Not available'); % NOT AVAILABLE
+    errordlg('Acceleration not available for electric energy types'); % NOT AVAILABLE
     return;
 end
 
@@ -224,7 +224,7 @@ rotor = find_by_type(network, 'driver.rotor');
 altitude_range = abs(segment.altitude(2) - segment.altitude(1));
 
 if is_type(source, 'energy.fuel')
-    errordlg('Not available'); % NOT AVAILABLE
+    errordlg('Vertical descent not available for fuel energy types'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
     dl = disc_loading(area(rotor), vehicle.mass * constants.g);
@@ -287,7 +287,7 @@ for i = 1 : length(mission.segments)
     %     if is_type(source, 'energy.fuel')
     %         % mf_fuel = 1 - % TODO
     %     elseif is_type(source, 'energy.electric')
-    %         errordlg('Not available'); % NOT AVAILABLE
+    %         errordlg('Combat not available for electric energy sources'); % NOT AVAILABLE
     %         break;
     %     end
     elseif strcmp(mission.segments{i}.type, 'descent') % Descent segment
