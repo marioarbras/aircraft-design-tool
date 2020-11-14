@@ -57,24 +57,28 @@
     "mission": {
         "segments": [
             {
+                "name": "A",
                 "type": "taxi",
                 "energy_network": "Electric Energy Network @ forward flight",
                 "time": 120.0,
                 "altitude": 0.0
             },
             {
+                "name": "B",
                 "type": "vertical_climb",
                 "energy_network": "Electric Energy Network @ vertical flight",
                 "velocity": 8.0,
                 "altitude": [0.0, 500.0]
             },
             {
+                "name": "C",
                 "type": "hover",
                 "energy_network": "Electric Energy Network @ vertical flight",
                 "altitude": 500.0,
                 "time": 10.0
             },
             {
+                "name": "D",
                 "type": "transition",
                 "energy_network": "Electric Energy Network @ vertical flight",
                 "altitude": 500.0,
@@ -83,6 +87,7 @@
                 "velocity": [0.0, 40.0]
             },
             {
+                "name": "E",
                 "type": "climb",
                 "energy_network": "Fuel Energy Network @ climb",
                 "velocity": 40.0,
@@ -90,6 +95,7 @@
                 "angle": 7.2
             },
             {
+                "name": "F",
                 "type": "cruise",
                 "energy_network": "Fuel Energy Network @ cruise",
                 "velocity": 50.0,
@@ -97,6 +103,7 @@
                 "altitude": 2500.0
             },
             {
+                "name": "G",
                 "type": "descent",
                 "energy_network": "Electric Energy Network @ forward flight",
                 "velocity": -40.0,
@@ -104,12 +111,14 @@
                 "angle": -5.0
             },
             {
+                "name": "H",
                 "type": "load_step",
                 "mass": -100.0,
                 "time": 0.0,
                 "altitude": 1000.0
             },
             {
+                "name": "I",
                 "type": "hold",
                 "energy_network": "Fuel Energy Network @ hover",
                 "velocity": 40.0,
@@ -117,12 +126,14 @@
                 "altitude": 1000.0
             },
             {
+                "name": "J",
                 "type": "load_step",
                 "mass": 100.0,
                 "time": 0.0,
                 "altitude": 1000.0
             },
             {
+                "name": "K",
                 "type": "climb",
                 "energy_network": "Fuel Energy Network @ climb",
                 "velocity": 40.0,
@@ -130,6 +141,7 @@
                 "angle": 7.2
             },
             {
+                "name": "L",
                 "type": "cruise",
                 "energy_network": "Fuel Energy Network @ cruise",
                 "velocity": 50.0,
@@ -137,6 +149,7 @@
                 "altitude": 2500.0
             },
             {
+                "name": "M",
                 "type": "descent",
                 "energy_network": "Fuel Energy Network @ idle",
                 "velocity": -6.0,
@@ -144,12 +157,14 @@
                 "angle": -5.0
             },
             {
+                "name": "N",
                 "type": "vertical_descent",
                 "energy_network": "Electric Energy Network @ vertical flight",
                 "velocity": -6.0,
                 "altitude": [400.0, 0.0]
             },
             {
+                "name": "O",
                 "type": "landing",
                 "energy_network": "Fuel Energy Network @ idle",
                 "time": 120.0,
@@ -185,8 +200,6 @@
                 "interf_factor": 1.0,
                 "diameter": 1.0,
                 "length": 4.0,
-                "area_ref": 1.0,
-                "area_wet": 2.0,
                 "mass": 800
             },
             {
@@ -200,14 +213,12 @@
                     "type": "naca0012",
                     "tc_max": 0.15,
                     "xc_max": 0.3,
-                    "cl_aa": 6.2,
+                    "lift_slope_coefficient": 6.2,
                     "cl_max": 2.0
                 },
                 "sweep_le": 10.0,
                 "sweep_c4": 15.0,
                 "sweep_tc_max": 20.0,
-                "area_ref": 15.0,
-                "area_wet": 30.0,
                 "mass": 200
             },
             {
@@ -221,14 +232,12 @@
                     "type": "naca0012",
                     "tc_max": 0.15,
                     "xc_max": 0.3,
-                    "cl_aa": 6.2,
+                    "lift_slope_coefficient": 6.2,
                     "cl_max": 2.0
                 },
                 "sweep_le": 10.0,
                 "sweep_c4": 15.0,
                 "sweep_tc_max": 20.0,
-                "area_ref": 1.0,
-                "area_wet": 2.0,
                 "mass": 50
             },
             {
@@ -242,14 +251,12 @@
                     "type": "naca0012",
                     "tc_max": 0.15,
                     "xc_max": 0.3,
-                    "cl_aa": 6.2,
+                    "lift_slope_coefficient": 6.2,
                     "cl_max": 2.0
                 },
                 "sweep_le": 10.0,
                 "sweep_c4": 15.0,
                 "sweep_tc_max": 20.0,
-                "area_ref": 2.0,
-                "area_wet": 4.0,
                 "mass": 50
             },
             {

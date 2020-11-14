@@ -25,78 +25,6 @@ for i = 1 : length(vehicle.components)
     mass = mass + m;
 end
 
-function [elem, id] = find_by_name(data, name)
-elem = struct();
-id = 0;
-for i = 1 : length(data)
-    if strcmp(data{i}.name, name)
-        elem = data{i};
-        id = i;
-        return;
-    end
-end
-
-function [elem, id] = find_by_type(data, type)
-elem = struct();
-id = [];
-type_tags = split(type, '.');
-for i = 1 : length(data)
-    match = true;
-
-    elem_tags = split(data{i}.type, '.');
-    for j = 1 : length(type_tags)
-        if ~strcmp(elem_tags{j}, type_tags{j})
-            match = false;
-            break;
-        end
-    end
-    
-    if (match == true)
-        elem = data{i};
-        id = i;
-        return;
-    end
-end
-
-% function [elems, ids] = find_by_type(data, type)
-% elems = {};
-% ids = [];
-% type_tags = split(type, '.');
-% for i = 1 : length(data)
-%     match = true;
-
-%     elem_tags = split(data{i}.type, '.');
-%     for j = 1 : length(type_tags)
-%         if ~strcmp(elem_tags{j}, type_tags{j})
-%             match = false;
-%             break;
-%         end
-%     end
-    
-%     if (match == true)
-%         elems = [elems data{i}];
-%         ids = [ids i];
-%     end
-% end
-
-function [elems, ids] = find_network_components(vehicle, network)
-elems = {};
-ids = [];
-for i = 1 : length(network.layout)
-    for j = 1 : length(vehicle.components)
-        if strcmp(network.layout{i}.name, vehicle.components{j}.name)
-            e = vehicle.components{j};
-            fields = fieldnames(network.layout{i});
-            for k = 1 : length(fields)
-                e.(fields{k}) = network.layout{i}.(fields{k});
-            end
-            elems = [elems e];
-            ids = [ids j];
-            break;
-        end
-    end
-end
-
 function mf_fuel = breguet(range, velocity, sfc, ld)
 mf_fuel = 1 - exp(-range * sfc / velocity / ld);
 
@@ -239,8 +167,8 @@ if is_type(source, 'energy.fuel')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
         prop = find_by_type(network, 'driver.propeller');
-        sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
-        mf_fuel = breguet(segment.range, segment.velocity, sfc, ld);
+        equivalent_sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
+        mf_fuel = breguet(segment.range, segment.velocity, equivalent_sfc, ld);
     end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - source.mass;
@@ -264,8 +192,8 @@ if is_type(source, 'energy.fuel')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
         prop = find_by_type(network, 'driver.propeller');
-        sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
-        mf_fuel = breguet(segment.range, segment.velocity, sfc, ld);
+        equivalent_sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
+        mf_fuel = breguet(segment.range, segment.velocity, equivalent_sfc, ld);
     end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - source.mass;

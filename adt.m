@@ -17,11 +17,15 @@ data = load_project(filename);
 data.concept = ahp(data.concept);
 print_concepts(data.concept)
 
-% Build mission profile
+% Add missing mission segment and vehicle component parameters
 data.mission = build_mission(data.mission);
+data.vehicle = build_vehicle(data.mission, data.vehicle);
 
 %% Plot mission profile
 plot_mission(data.mission);
+
+%% Aerodynamics calculation
+data.vehicle = aerodynamics(data.mission, data.vehicle);
 
 % Take-off mass estimation
 [data.mission, data.vehicle] = mtow(data.mission, data.vehicle, data.energy);
@@ -32,12 +36,6 @@ data.vehicle = design_point(data.mission, data.vehicle, data.energy);
 % Recalculate take-off mass based on updated values from design point
 % [data.mission, data.vehicle] = mtow(data.mission, data.vehicle, data.energy);
 % data.vehicle = design_point(data.mission, data.vehicle, data.energy);
-
-%% Lift curve slope
-data.vehicle = lift_slope(data.vehicle, data.mission);
-
-%% Drag buildup
-data.vehicle = drag_buildup(data.vehicle, data.mission);
 
 %% Save new project file
 if ~isempty(varargin)
