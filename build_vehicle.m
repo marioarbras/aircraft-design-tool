@@ -10,6 +10,7 @@ for i = 1 : length(vehicle.components)
     if is_type(vehicle.components{i}, 'fuselage')
         vehicle.components{i}.area_wet = fuselage_area_wet(vehicle.components{i}.length, vehicle.components{i}.diameter);
     elseif is_type(vehicle.components{i}, 'wing')
+        vehicle.components{i}.span = vehicle.components{i}.aspect_ratio * vehicle.components{i}.mean_chord;
         vehicle.components{i}.area_ref = vehicle.components{i}.span * vehicle.components{i}.mean_chord;
         vehicle.components{i}.area_wet = wing_area_wet(vehicle.components{i}.airfoil.tc_max, vehicle.components{i}.area_ref);
     end

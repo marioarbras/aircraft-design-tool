@@ -98,7 +98,7 @@
                 "name": "F",
                 "type": "cruise",
                 "energy_network": "Fuel Energy Network @ cruise",
-                "velocity": 50.0,
+                "velocity": 60.0,
                 "range": 80000.0,
                 "altitude": 2500.0
             },
@@ -120,7 +120,7 @@
             {
                 "name": "I",
                 "type": "hold",
-                "energy_network": "Fuel Energy Network @ hover",
+                "energy_network": "Fuel Energy Network @ hold",
                 "velocity": 40.0,
                 "time": 300.0,
                 "altitude": 1000.0
@@ -144,7 +144,7 @@
                 "name": "L",
                 "type": "cruise",
                 "energy_network": "Fuel Energy Network @ cruise",
-                "velocity": 50.0,
+                "velocity": 80.0,
                 "range": 80000.0,
                 "altitude": 2500.0
             },
@@ -206,9 +206,9 @@
                 "name": "Main Wing",
                 "type": "wing.main",
                 "interf_factor": 1.0,
-                "aspect_ratio": 5.0,
-                "span": 10.0,
-                "mean_chord": 1.5,
+                "aspect_ratio": 7.0,
+                "mean_chord": 3.0,
+                "oswald_efficiency": 0.85,
                 "airfoil": {
                     "type": "naca0012",
                     "tc_max": 0.15,
@@ -226,8 +226,8 @@
                 "type": "wing.htail",
                 "interf_factor": 1.0,
                 "aspect_ratio": 5.0,
-                "span": 2.0,
                 "mean_chord": 0.5,
+                "oswald_efficiency": 0.85,
                 "airfoil": {
                     "type": "naca0012",
                     "tc_max": 0.15,
@@ -245,8 +245,8 @@
                 "type": "wing.vtail",
                 "interf_factor": 1.0,
                 "aspect_ratio": 5.0,
-                "span": 2.0,
                 "mean_chord": 1.0,
+                "oswald_efficiency": 0.85,
                 "airfoil": {
                     "type": "naca0012",
                     "tc_max": 0.15,
@@ -263,18 +263,21 @@
                 "name": "Turboshaft",
                 "type": "engine.prop",
                 "efficiency": 0.8,
-                "mass": 100
+                "mass": 100,
+                "max_power": 210000
             },
             {
                 "name": "4-stroke Piston Engine",
                 "type": "engine.prop",
                 "efficiency": 0.8,
-                "mass": 100
+                "mass": 100,
+                "max_power": 200000
             },
             {
                 "name": "Jet Engine",
                 "type": "engine.jet",
-                "mass": 200
+                "mass": 200,
+                "max_power": 120000
             },
             {
                 "name": "Battery",
@@ -292,10 +295,10 @@
             },
             {
                 "name": "Rotor",
-                "type": "driver.rotor",
+                "type": "driver.rotor.main",
                 "number": 2,
                 "number_blades": 5,
-                "radius": 5,
+                "radius": 2,
                 "rotor_solidity": 0.08,
                 "induced_power_factor": 1.15,
                 "base_drag_coefficient": 0.02,
@@ -327,15 +330,15 @@
             },
             {
                 "name": "Electric Motor",
-                "type": "motor",
-                "number": 2,
+                "type": "engine.electric",
+                "number": 3,
                 "efficiency": 0.97,
-                "mass": 50
+                "mass": 50,
+                "max_power": 200000
             }
         ]
     },
-    "energy" :
-    {
+    "energy" : {
         "networks": [
             {
                 "name": "Fuel Energy Network @ climb",
@@ -368,7 +371,7 @@
                 ]
             },
             {
-                "name": "Fuel Energy Network @ hover",
+                "name": "Fuel Energy Network @ hold",
                 "layout": [
                     {
                         "name": "Fuel Tank"

@@ -4,7 +4,7 @@
 %
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
-function vehicle = drag_buildup(mission, vehicle)
+function vehicle = aero_analysis(mission, vehicle)
 main_wing = find_by_type(vehicle.components, 'wing.main');
 main_wing_area_ref = main_wing.span * main_wing.mean_chord;
 

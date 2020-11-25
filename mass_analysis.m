@@ -4,7 +4,7 @@
 %
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
-function [mission, vehicle] = mtow(mission, vehicle, energy)
+function [mission, vehicle] = mass_analysis(mission, vehicle, energy)
 
 mass_to = fsolve(@(x)mtow_error(x, mission, vehicle, energy), sum_masses(vehicle), optimoptions('fsolve', 'Display','none'));
 [~, mission, vehicle] = mtow_error(mass_to, mission, vehicle, energy);
@@ -28,23 +28,11 @@ end
 function mf_fuel = breguet(range, velocity, sfc, ld)
 mf_fuel = 1 - exp(-range * sfc / velocity / ld);
 
-function a = area(rotor)
-a = pi() * rotor.radius^2;
-if isfield(rotor, 'number')
-    a = a * rotor.number;
-end
-
-function dl = disc_loading(area, weight)
-dl = weight / area;
-
 function e = network_efficiency(network)
 e = 1.0;
 for i = 1 : length(network)
     e = e * network{i}.efficiency;
 end
-
-function test = is_type(data, type)
-test = strcmp(data.type, type);
 
 function ld = estimate_ld_max(vehicle)
 c = find_by_type(vehicle.components, 'wing.main');
@@ -88,7 +76,7 @@ if is_type(source, 'energy.fuel')
 elseif is_type(source, 'energy.electric')
     rotor = find_by_type(network, 'driver.rotor');
 
-    dl = disc_loading(area(rotor), vehicle.mass * constants.g);
+    dl = vehicle.mass * constants.g / rotor_area(rotor);
     pl = rotor.efficiency * sqrt(2 * segment.density / dl);
     mf_batt = segment.time * constants.g / source.specific_energy / network_efficiency(network) / pl;
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
@@ -125,7 +113,7 @@ elseif is_type(source, 'energy.electric')
     rotor = find_by_type(network, 'driver.rotor');
 
     altitude_range = segment.altitude(2) - segment.altitude(1);
-    dl = disc_loading(area(rotor), vehicle.mass * constants.g);
+    dl = vehicle.mass * constants.g / rotor_area(rotor);
     pl = 1 / (segment.velocity - rotor.induced_power_factor / 2 * segment.velocity + rotor.induced_power_factor / 2 * sqrt(segment.velocity^2 + 2 * dl / segment.density(1)) + segment.density(1) * rotor.tip_velocity^3 / dl * rotor.rotor_solidity * rotor.base_drag_coefficient / 8); % Power loading
     mf_batt = altitude_range * constants.g / source.specific_energy / network_efficiency(network) / pl / segment.velocity; % Mass fraction for this segment
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
@@ -158,11 +146,11 @@ global constants;
 
 [network, network_ids] = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 [source, source_id] = find_by_type(network, 'energy');
-engine = find_by_type(network, 'engine');
-
-ld = get_ld(vehicle, segment, engine);
 
 if is_type(source, 'energy.fuel')
+    engine = find_by_type(network, 'engine');
+    ld = get_ld(vehicle, segment, engine);
+
     if is_type(engine, 'engine.jet')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
@@ -183,11 +171,11 @@ global constants;
 
 [network, network_ids] = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 [source, source_id] = find_by_type(network, 'energy');
-engine = find_by_type(network, 'engine');
-
-ld = get_ld(vehicle, segment, engine);
 
 if is_type(source, 'energy.fuel')
+    engine = find_by_type(network, 'engine');
+    ld = get_ld(vehicle, segment, engine);
+
     if is_type(engine, 'engine.jet')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
@@ -218,7 +206,6 @@ global constants;
 
 [network, network_ids] = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 [source, source_id] = find_by_type(network, 'energy');
-engine = find_by_type(network, 'engine');
 rotor = find_by_type(network, 'driver.rotor');
 
 altitude_range = abs(segment.altitude(2) - segment.altitude(1));
@@ -227,7 +214,7 @@ if is_type(source, 'energy.fuel')
     errordlg('Vertical descent not available for fuel energy types'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
-    dl = disc_loading(area(rotor), vehicle.mass * constants.g);
+    dl = vehicle.mass * constants.g / rotor_area(rotor);
     v_i = sqrt(dl / 2 / segment.density(2)); % Induced velocity in hover
     if segment.velocity / v_i <= -2 % If this condition is met, the vertical climb equation is used for descent, else, an empirical equation is employed
         pl = 1 / (segment.velocity - rotor.induced_power_factor / 2 * (segment.velocity + sqrt(segment.velocity^2 - 2 * dl / segment.density(2))) + segment.density(2) * rotor.tip_velocity^3 / dl * rotor.rotor_solidity * rotor.base_drag_coefficient / 8);

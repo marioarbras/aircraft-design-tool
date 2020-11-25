@@ -8,7 +8,6 @@ function data = adt(filename, varargin)
 %% Constants
 global constants;
 constants.g = 9.81; % m/s^2
-constants.e = 0.85; % Oswald efficiency number.
 
 %% Load project file
 data = load_project(filename);
@@ -24,18 +23,10 @@ data.vehicle = build_vehicle(data.mission, data.vehicle);
 %% Plot mission profile
 plot_mission(data.mission);
 
-%% Aerodynamics calculation
-data.vehicle = aerodynamics(data.mission, data.vehicle);
-
-% Take-off mass estimation
-[data.mission, data.vehicle] = mtow(data.mission, data.vehicle, data.energy);
-
-%% Design point calculation
-data.vehicle = design_point(data.mission, data.vehicle, data.energy);
-
-% Recalculate take-off mass based on updated values from design point
-% [data.mission, data.vehicle] = mtow(data.mission, data.vehicle, data.energy);
-% data.vehicle = design_point(data.mission, data.vehicle, data.energy);
+%% Mission analyses
+data.vehicle = aero_analysis(data.mission, data.vehicle);
+[data.mission, data.vehicle] = mass_analysis(data.mission, data.vehicle, data.energy);
+data.vehicle = design_space_analysis(data.mission, data.vehicle, data.energy);
 
 %% Save new project file
 if ~isempty(varargin)
