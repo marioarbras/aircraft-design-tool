@@ -181,7 +181,7 @@ elseif is_type(engine, 'engine.prop')
     range_constraint = range_constraint_prop(segment.density, segment.velocity, segment_props.base_drag_coefficient, k);
     range_region = range_region_prop(wl_grid, segment.density, segment.velocity, segment_props.base_drag_coefficient, k);
 
-    prop = find_by_type(network, 'propeller');
+    prop = find_by_type(network, 'driver.propeller');
     cruise_speed_constraint = cruise_speed_constraint_prop(wl, segment.density, segment.velocity, segment_props.base_drag_coefficient, k, prop.efficiency);
     cruise_speed_region = cruise_speed_region_prop(plf_grid, wl_grid, segment.density, segment.velocity, segment_props.base_drag_coefficient, k, prop.efficiency);
 end
