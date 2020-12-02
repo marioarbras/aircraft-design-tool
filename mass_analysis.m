@@ -15,7 +15,7 @@ for i = 1 : length(vehicle.components)
     m = vehicle.components{i}.mass;
 
     if isfield(vehicle.components{i}, 'reserve')
-        m = m * vehicle.components{i}.reserve;
+        m = m * (1 + vehicle.components{i}.reserve);
     end
 
     if isfield(vehicle.components{i}, 'number')
