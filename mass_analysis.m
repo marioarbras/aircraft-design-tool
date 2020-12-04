@@ -6,6 +6,13 @@
 
 function [mission, vehicle] = mass_analysis(mission, vehicle, energy)
 
+% Set energy source mass values to zero
+for i = 1 : length(vehicle.components)
+    if is_type(vehicle.components{i}, 'energy')
+        vehicle.components{i}.mass = 0;
+    end
+end
+
 mass_to = fsolve(@(x)mtow_error(x, mission, vehicle, energy), sum_masses(vehicle), optimoptions('fsolve', 'Display','none'));
 [~, mission, vehicle] = mtow_error(mass_to, mission, vehicle, energy);
 
@@ -61,7 +68,7 @@ function vehicle = taxi(segment, vehicle, energy)
 if is_type(source, 'energy.fuel')
     mf_fuel = 1 - 0.9725;
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
-    vehicle.mass = vehicle.mass - source.mass;
+    vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 end
 
 function vehicle = hover(segment, vehicle, energy)
@@ -94,7 +101,7 @@ if is_type(source, 'energy.fuel')
         mf_fuel = 1 - (0.96 - 0.03 * (mach - 1));
     end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
-    vehicle.mass = vehicle.mass - source.mass;
+    vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
     errordlg('Climb not available for electric energy types'); % NOT AVAILABLE
     return;
@@ -135,7 +142,7 @@ if is_type(source, 'energy.fuel')
         mf_fuel = 1 - (0.96 - 0.03 * (mach - 1));
     end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
-    vehicle.mass = vehicle.mass - source.mass;
+    vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
     errordlg('Acceleration not available for electric energy types'); % NOT AVAILABLE
     return;
@@ -159,7 +166,7 @@ if is_type(source, 'energy.fuel')
         mf_fuel = breguet(segment.range, segment.velocity, equivalent_sfc, ld);
     end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
-    vehicle.mass = vehicle.mass - source.mass;
+    vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
     mf_batt = segment.range * constants.g / source.specific_energy / network_efficiency(network) / ld;
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
@@ -184,7 +191,7 @@ if is_type(source, 'energy.fuel')
         mf_fuel = breguet(segment.range, segment.velocity, equivalent_sfc, ld);
     end
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
-    vehicle.mass = vehicle.mass - source.mass;
+    vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
     mf_batt = segment.time * segment.velocity * constants.g / source.specific_energy / network_efficiency(network) / ld;
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
@@ -238,7 +245,7 @@ function vehicle = landing(segment, vehicle, energy)
 if is_type(source, 'energy.fuel')
     mf_fuel = 1 - 0.9725;
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
-    vehicle.mass = vehicle.mass - source.mass;
+    vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
     % mf_batt = 0;
 end

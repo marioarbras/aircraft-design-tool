@@ -6,10 +6,27 @@
 
 function concept = ahp(concept)
 
-if ~isfield(concept.categories, 'weight')
-    concept.categories.weight = 1;
-end
+concept.categories = clear_category_weights(concept.categories);
+concept.designs = clear_design_weights(concept.designs);
+concept.categories.weight = 1;
+
 [concept.categories, concept.designs] = priority_vectors(concept.categories, concept.designs);
+
+function category = clear_category_weights(category)
+category.weight = 0;
+if isfield(category, 'categories')
+    if ~iscell(category.categories)
+        category.categories = num2cell(category.categories);
+    end
+    for i = 1 : length(category.categories)
+        category.categories{i} = clear_category_weights(category.categories{i});
+    end
+end
+
+function designs = clear_design_weights(designs)
+for i = 1 : length(designs)
+    designs{i}.weight = 0;
+end
 
 function [category, designs] = priority_vectors(category, designs)
 [v,d] = eig(category.pairs, 'vector');
@@ -17,18 +34,12 @@ function [category, designs] = priority_vectors(category, designs)
 v(:,j) = abs(v(:,j) / norm(v(:,j),1));
  
 if isfield(category, 'categories')
-    if ~iscell(category.categories)
-        category.categories = num2cell(category.categories);
-    end
     for i = 1 : length(category.categories)
         category.categories{i}.weight = v(i,j) * category.weight;
         [category.categories{i}, designs] = priority_vectors(category.categories{i}, designs);
     end
 else
     for i = 1 : length(designs)
-        if ~isfield(designs{i}, 'weight')
-            designs{i}.weight = 0;
-        end
         designs{i}.weight = designs{i}.weight + v(i,j) * category.weight;
     end
 end

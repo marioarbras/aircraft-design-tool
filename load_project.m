@@ -32,6 +32,20 @@ if isfield(data, 'vehicle')
     if ~iscell(data.vehicle.components)
         data.vehicle.components = num2cell(data.vehicle.components);
     end
+
+    for i = 1 : length(data.vehicle.components)
+        if isfield(data.vehicle.components{i}, 'segments')
+            if ~iscell(data.vehicle.components{i}.segments)
+                data.vehicle.components{i}.segments = num2cell(data.vehicle.components{i}.segments);
+            end
+        end
+    end
+
+    if isfield(data.vehicle, 'segments')
+        if ~iscell(data.vehicle.segments)
+            data.vehicle.segments = num2cell(data.vehicle.segments);
+        end
+    end
 end
 
 % Energy

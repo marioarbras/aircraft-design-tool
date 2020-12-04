@@ -16,46 +16,6 @@ for i = 1 : length(vehicle.components)
     end
 end
 
-% Add missing segments vector to vehicle components
-for i = 1 : length(vehicle.components)
-    if (is_type(vehicle.components{i}, 'fuselage') || is_type(vehicle.components{i}, 'wing'))
-        if ~isfield(vehicle.components{i}, 'segments')
-            vehicle.components{i}.segments = repmat({struct()}, length(mission.segments), 1);
-            for j = 1 : length(vehicle.components{i}.segments)
-                if ~isfield(vehicle.components{i}.segments{j}, 'name')
-                    vehicle.components{i}.segments{j}.name = mission.segments{j}.name;
-                end
-
-                if ~isfield(vehicle.components{i}.segments{j}, 'base_drag_coefficient')
-                    vehicle.components{i}.segments{j}.base_drag_coefficient = 0;
-                end
-
-                if ~isfield(vehicle.components{i}.segments{j}, 'lift_slope_coefficient')
-                    vehicle.components{i}.segments{j}.lift_slope_coefficient = 0;
-                end
-            end
-        end
-    end
-end
-
-% Add missing segments vector to vehicle
-if ~isfield(vehicle, 'segments')
-    vehicle.segments = repmat({struct()}, length(mission.segments), 1);
-    for i = 1 : length(vehicle.segments)
-        if ~isfield(vehicle.segments{i}, 'name')
-            vehicle.segments{i}.name = mission.segments{i}.name;
-        end
-
-        if ~isfield(vehicle.segments{i}, 'base_drag_coefficient')
-            vehicle.segments{i}.base_drag_coefficient = 0;
-        end
-
-        if ~isfield(vehicle.segments{i}, 'lift_slope_coefficient')
-            vehicle.segments{i}.lift_slope_coefficient = 0;
-        end
-    end
-end
-
 function a = fuselage_area_wet(l, d)
 a = pi() * d * l + pi() * d^2;
 

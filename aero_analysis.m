@@ -5,6 +5,28 @@
 % This file is subject to the license terms in the LICENSE file included in this distribution
 
 function vehicle = aero_analysis(mission, vehicle)
+
+% Add missing segments vector to vehicle components
+for i = 1 : length(vehicle.components)
+    if (is_type(vehicle.components{i}, 'fuselage') || is_type(vehicle.components{i}, 'wing'))
+        vehicle.components{i}.segments = repmat({struct()}, length(mission.segments), 1);
+        for j = 1 : length(vehicle.components{i}.segments)
+            vehicle.components{i}.segments{j}.name = mission.segments{j}.name;
+            vehicle.components{i}.segments{j}.base_drag_coefficient = 0;
+            vehicle.components{i}.segments{j}.lift_slope_coefficient = 0;
+        end
+    end
+end
+
+
+% Add missing segments vector to vehicle
+vehicle.segments = repmat({struct()}, length(mission.segments), 1);
+for i = 1 : length(vehicle.segments)
+    vehicle.segments{i}.name = mission.segments{i}.name;
+    vehicle.segments{i}.base_drag_coefficient = 0;
+    vehicle.segments{i}.lift_slope_coefficient = 0;
+end
+
 main_wing = find_by_type(vehicle.components, 'wing.main');
 main_wing_area_ref = main_wing.span * main_wing.mean_chord;
 
