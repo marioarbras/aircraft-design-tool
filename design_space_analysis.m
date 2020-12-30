@@ -142,15 +142,15 @@ network = find_network_components(vehicle, find_by_name(energy.networks, segment
 [segment_props, ~] = find_by_name(vehicle.segments, segment.name);
 rotor = find_by_type(network, 'driver.rotor');
 
-constraint = transition_constraint(wl, dl, segment.density, k, segment_props.base_drag_coefficient, rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.efficiency, next_segment.velocity, segment.transition_angle);
-region = transition_region(plv_grid, wl, dl_grid, segment.density, k, segment_props.base_drag_coefficient, rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.efficiency, next_segment.velocity, segment.transition_angle);
+constraint = transition_constraint(wl, dl, segment.density, k, segment_props.base_drag_coefficient, rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, next_segment.velocity, segment.transition_angle);
+region = transition_region(plv_grid, wl, dl_grid, segment.density, k, segment_props.base_drag_coefficient, rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, next_segment.velocity, segment.transition_angle);
 
 function [constraint, region] = vertical_climb(plv_grid, dl_grid, dl, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 rotor = find_by_type(network, 'driver.rotor');
 
-constraint = vertical_climb_constraint(dl, segment.density(1), rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.efficiency, segment.velocity);
-region = vertical_climb_region(plv_grid, dl_grid, segment.density(1), rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.efficiency, segment.velocity);
+constraint = vertical_climb_constraint(dl, segment.density(1), rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, segment.velocity);
+region = vertical_climb_region(plv_grid, dl_grid, segment.density(1), rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, segment.velocity);
 
 function [constraint, region] = climb(plf_grid, wl_grid, wl, k, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
