@@ -6,11 +6,13 @@
 
 function mm = air_viscosity(t)
 % Sutherland's formula (Crane, 1988)
-% http://jullio.pe.kr/fluent6.1/help/html/ug/node294.htm
+% https://www.grc.nasa.gov/www/k-12/airplane/viscosity.html
+% https://www.afs.enea.it/project/neptunius/docs/fluent/html/ug/node294.htm
+% https://doc.comsol.com/5.5/doc/com.comsol.help.cfd/cfd_ug_fluidflow_high_mach.08.27.html
 
 % Standard air
 s = 110.56;
 t0 = 273.11;
-mm0 = 1.7894e-5;
+mm0 = 1.716e-5;
 
 mm = mm0 * (t / t0)^1.5 * (t0 + s) / (t + s);
