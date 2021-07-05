@@ -161,7 +161,7 @@ if is_type(source, 'energy.fuel')
     if is_type(engine, 'engine.jet')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
-        prop = find_by_type(network, 'driver.propeller');
+        prop = find_by_type(network, 'driver.rotor');
         equivalent_sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
         mf_fuel = breguet(segment.range, segment.velocity, equivalent_sfc, ld);
     end
@@ -186,7 +186,7 @@ if is_type(source, 'energy.fuel')
     if is_type(engine, 'engine.jet')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
-        prop = find_by_type(network, 'driver.propeller');
+        prop = find_by_type(network, 'driver.rotor');
         equivalent_sfc = engine.brake_specific_fuel_consumption * segment.velocity / prop.efficiency;
         mf_fuel = breguet(segment.range, segment.velocity, equivalent_sfc, ld);
     end

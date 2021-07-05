@@ -308,7 +308,7 @@
             },
             {
                 "name": "Propeller",
-                "type": "driver.propeller",
+                "type": "driver.rotor",
                 "number": 2,
                 "number_blades": 4,
                 "radius": 2.3,
