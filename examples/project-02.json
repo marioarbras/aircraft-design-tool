@@ -1,0 +1,340 @@
+{
+    "concept": {
+        "categories": {
+            "name": "New Concept",
+            "pairs": [
+                [1, 0.14286],
+                [7,       1]
+            ],
+            "categories": [
+                {
+                    "name": "Number of Passengers",
+                    "pairs": [
+                        [      1, 0.11111,       9],
+                        [      9,       1, 0.11111],
+                        [0.11111,       9,       1]
+                    ]
+                },
+                {
+                    "name": "Powerplant",
+                    "pairs": [
+                        [1, 0.125],
+                        [8,     1]
+                    ],
+                    "categories": [
+                        {
+                            "name": "Max Power Installed",
+                            "pairs": [
+                                [      1, 0.14286, 9],
+                                [      7,       1, 9],
+                                [0.11111, 0.11111, 1]
+                            ]
+                        },
+                        {
+                            "name": "Pollutant Emissions",
+                            "pairs": [
+                                [   1, 4, 0.11111],
+                                [0.25, 1, 0.11111],
+                                [   9, 9,       1]
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "designs": [
+            {
+                "name": "Helicopter"
+            },
+            {
+                "name": "Aircraft"
+            },
+            {
+                "name": "Paper Plane"
+            }
+        ]
+    },
+    "mission": {
+        "segments": [
+            {
+                "name": "A",
+                "type": "taxi",
+                "energy_network": "Electric Energy Network",
+                "time": 120.0,
+                "altitude": 0.0
+            },
+            {
+                "name": "B",
+                "type": "vertical_climb",
+                "energy_network": "Electric Energy Network",
+                "velocity": 8.0,
+                "altitude": [0.0, 500.0]
+            },
+            {
+                "name": "C",
+                "type": "hover",
+                "energy_network": "Electric Energy Network",
+                "altitude": 500.0,
+                "time": 10.0
+            },
+            {
+                "name": "D",
+                "type": "transition",
+                "energy_network": "Electric Energy Network",
+                "altitude": 500.0,
+                "transition_angle": 40.0,
+                "time": 120.0,
+                "velocity": [0.0, 40.0]
+            },
+            {
+                "name": "E",
+                "type": "climb",
+                "energy_network": "Fuel Energy Network @ throttle=1",
+                "velocity": 40.0,
+                "altitude": [500.0, 2500.0],
+                "angle": 7.2
+            },
+            {
+                "name": "F",
+                "type": "cruise",
+                "energy_network": "Fuel Energy Network @ throttle=0.8",
+                "velocity": 60.0,
+                "range": 80000.0,
+                "altitude": 2500.0
+            },
+            {
+                "name": "G",
+                "type": "descent",
+                "energy_network": "Fuel Energy Network @ throttle=0",
+                "velocity": -6.0,
+                "altitude": [2500.0, 400.0],
+                "angle": -5.0
+            },
+            {
+                "name": "H",
+                "type": "vertical_descent",
+                "energy_network": "Electric Energy Network",
+                "velocity": -6.0,
+                "altitude": [400.0, 0.0]
+            },
+            {
+                "name": "I",
+                "type": "landing",
+                "energy_network": "Electric Energy Network",
+                "time": 120.0,
+                "altitude": 0.0
+            }
+        ]
+    },
+    "vehicle": {
+        "components": [
+            {
+                "name": "Payload",
+                "type": "mass.point",
+                "mass": 200
+            },
+            {
+                "name": "Empty",
+                "type": "mass.empty",
+                "a": 1.07,
+                "c": -0.09,
+                "mass": 0
+            },
+            {
+                "name": "Fuselage",
+                "type": "fuselage",
+                "interf_factor": 1.0,
+                "diameter": 1.0,
+                "length": 4.0,
+                "mass": 0
+            },
+            {
+                "name": "Main Wing",
+                "type": "wing.main",
+                "interf_factor": 1.0,
+                "aspect_ratio": 7.0,
+                "mean_chord": 3.0,
+                "oswald_efficiency": 0.85,
+                "airfoil": {
+                    "type": "naca0012",
+                    "tc_max": 0.15,
+                    "xc_max": 0.3,
+                    "lift_slope_coefficient": 6.2,
+                    "cl_max": 2.0
+                },
+                "sweep_le": 10.0,
+                "sweep_c4": 15.0,
+                "sweep_tc_max": 20.0,
+                "mass": 0
+            },
+            {
+                "name": "Horizontal Tail",
+                "type": "wing.htail",
+                "interf_factor": 1.0,
+                "aspect_ratio": 5.0,
+                "mean_chord": 0.5,
+                "oswald_efficiency": 0.85,
+                "airfoil": {
+                    "type": "naca0012",
+                    "tc_max": 0.15,
+                    "xc_max": 0.3,
+                    "lift_slope_coefficient": 6.2,
+                    "cl_max": 2.0
+                },
+                "sweep_le": 10.0,
+                "sweep_c4": 15.0,
+                "sweep_tc_max": 20.0,
+                "mass": 0
+            },
+            {
+                "name": "Vertical Tail",
+                "type": "wing.vtail",
+                "interf_factor": 1.0,
+                "aspect_ratio": 5.0,
+                "mean_chord": 1.0,
+                "oswald_efficiency": 0.85,
+                "airfoil": {
+                    "type": "naca0012",
+                    "tc_max": 0.15,
+                    "xc_max": 0.3,
+                    "lift_slope_coefficient": 6.2,
+                    "cl_max": 2.0
+                },
+                "sweep_le": 10.0,
+                "sweep_c4": 15.0,
+                "sweep_tc_max": 20.0,
+                "mass": 0
+            },
+            {
+                "name": "4-stroke Piston Engine",
+                "type": "engine.prop",
+                "efficiency": 0.8,
+                "mass": 0,
+                "max_power": 200000
+            },
+            {
+                "name": "Battery",
+                "type": "energy.electric",
+                "specific_energy": 360000.0,
+                "efficiency": 0.9,
+                "reserve": 0.2,
+                "mass": 0
+            },
+            {
+                "name": "Fuel Tank",
+                "type": "energy.fuel",
+                "reserve": 0.06,
+                "mass": 0
+            },
+            {
+                "name": "Rotor",
+                "type": "driver.rotor.main",
+                "number": 2,
+                "number_blades": 5,
+                "radius": 2,
+                "rotor_solidity": 0.08,
+                "induced_power_factor": 1.15,
+                "base_drag_coefficient": 0.02,
+                "tip_velocity": 240.1,
+                "efficiency": 0.6,
+                "mass": 0
+            },
+            {
+                "name": "Propeller",
+                "type": "driver.rotor",
+                "number": 2,
+                "number_blades": 4,
+                "radius": 2.3,
+                "tip_velocity": 240.1,
+                "efficiency": 0.6,
+                "mass": 0
+            },
+            {
+                "name": "Gearbox",
+                "type": "gearbox",
+                "efficiency": 0.95,
+                "mass": 0
+            },
+            {
+                "name": "Electric Motor",
+                "type": "engine.electric",
+                "number": 3,
+                "efficiency": 0.97,
+                "mass": 0,
+                "max_power": 200000
+            }
+        ]
+    },
+    "energy" : {
+        "networks": [
+            {
+                "name": "Fuel Energy Network @ throttle=1",
+                "layout": [
+                    {
+                        "name": "Fuel Tank"
+                    },
+                    {
+                        "name": "4-stroke Piston Engine",
+                        "brake_specific_fuel_consumption": 4.25e-5
+                    },
+                    {
+                        "name": "Gearbox"
+                    },
+                    {
+                        "name": "Propeller"
+                    }
+                ]
+            },
+            {
+                "name": "Fuel Energy Network @ throttle=0.8",
+                "layout": [
+                    {
+                        "name": "Fuel Tank"
+                    },
+                    {
+                        "name": "4-stroke Piston Engine",
+                        "brake_specific_fuel_consumption": 3.25e-5
+                    },
+                    {
+                        "name": "Gearbox"
+                    },
+                    {
+                        "name": "Propeller"
+                    }
+                ]
+            },
+            {
+                "name": "Fuel Energy Network @ throttle=0",
+                "layout": [
+                    {
+                        "name": "Fuel Tank"
+                    },
+                    {
+                        "name": "4-stroke Piston Engine",
+                        "brake_specific_fuel_consumption": 2.55e-5
+                    },
+                    {
+                        "name": "Gearbox"
+                    },
+                    {
+                        "name": "Propeller"
+                    }
+                ]
+            },
+            {
+                "name": "Electric Energy Network",
+                "layout": [
+                    {
+                        "name": "Battery"
+                    },
+                    {
+                        "name": "Electric Motor"
+                    },
+                    {
+                        "name": "Rotor"
+                    }
+                ]
+            }
+        ]
+    }
+}

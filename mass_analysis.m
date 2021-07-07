@@ -258,6 +258,13 @@ global constants;
 
 vehicle.mass = x;
 
+% Calculate empty weight
+[empty, empty_id] = find_by_type(vehicle.components, 'mass.empty');
+if (~isempty(fieldnames(empty)))
+    vehicle.components{empty_id}.mass = empty.a * vehicle.mass^(empty.c + 1);
+    vehicle.mass = vehicle.mass - vehicle.components{empty_id}.mass;
+end
+
 % Iterate over mission segments
 for i = 1 : length(mission.segments)
     [mission.segments{i}.temperature, mission.segments{i}.speed_sound, mission.segments{i}.pressure, mission.segments{i}.density] = atmosisa(mission.segments{i}.altitude);
@@ -305,6 +312,8 @@ for i = 1 : length(mission.segments)
     % mission.time = mission.time + mission.segments{i}.time;
     % mission.range = mission.range + mission.segments{i}.range;
 end
+
+vehicle.mass = x;
 
 % Accumulate component masses and calculate error
 error = vehicle.mass - sum_masses(vehicle);

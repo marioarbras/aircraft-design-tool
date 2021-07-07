@@ -24,7 +24,6 @@ vehicle.segments = repmat({struct()}, length(mission.segments), 1);
 for i = 1 : length(vehicle.segments)
     vehicle.segments{i}.name = mission.segments{i}.name;
     vehicle.segments{i}.base_drag_coefficient = 0;
-    vehicle.segments{i}.lift_slope_coefficient = 0;
 end
 
 main_wing = find_by_type(vehicle.components, 'wing.main');
@@ -62,7 +61,6 @@ for i = 1 : length(vehicle.components)
             [~, vehicle_segment_id] = find_by_name(vehicle.segments, mission.segments{j}.name);
 
             vehicle.segments{vehicle_segment_id}.base_drag_coefficient = vehicle.segments{vehicle_segment_id}.base_drag_coefficient + vehicle.components{i}.segments{comp_segment_id}.base_drag_coefficient;
-            vehicle.segments{vehicle_segment_id}.lift_slope_coefficient = vehicle.segments{vehicle_segment_id}.lift_slope_coefficient + vehicle.components{i}.segments{comp_segment_id}.lift_slope_coefficient;
         end
     end
 end
