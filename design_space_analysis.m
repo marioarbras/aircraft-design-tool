@@ -85,7 +85,7 @@ for i = 1 : length(mission.segments)
 
         % TODO
         
-        fpl = vehicle.mass * constants.g / max_power(network);
+        fpl = vehicle.mass * constants.g / network_max_power(network);
         if fpl > fpl_design
             fpl_design = fpl;
         end
@@ -121,7 +121,7 @@ for i = 1 : length(mission.segments)
 
         % TODO
 
-        vpl = vehicle.mass * constants.g / max_power(network);
+        vpl = vehicle.mass * constants.g / network_max_power(network);
         if vpl > vpl_design
             vpl_design = vpl;
         end
@@ -146,17 +146,6 @@ yyaxis right;
 scatter(vpl_design, dl_design, 'filled', 'MarkerEdgeColor', '#D95319', 'MarkerFaceColor', '#D95319', 'DisplayName', 'Vertical Flight Design Point');
 
 % Helper functions
-function max_p = max_power(network)
-max_p = 0;
-for i = 1 : length(network)
-    if (is_type(network{i}, 'engine'))
-        p = engine_max_power(network{i});
-        if p > max_p
-            max_p = p;
-        end
-    end
-end
-
 function [constraint, region, power] = hover(plv_grid, dl_grid, dl, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 engine = find_by_type(network, 'engine');
@@ -164,7 +153,7 @@ engine = find_by_type(network, 'engine');
 constraint = hover_constraint(dl, segment.density, engine.efficiency);
 region = hover_region(plv_grid, dl_grid, segment.density, engine.efficiency);
 
-power = max_power(network);
+power = network_max_power(network);
 
 function [constraint, region, power] = transition(plv_grid, dl_grid, wl, dl, k, segment, next_segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
@@ -174,7 +163,7 @@ rotor = find_by_type(network, 'driver.rotor');
 constraint = transition_constraint(wl, dl, segment.density, k, segment_props.base_drag_coefficient, rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, next_segment.velocity, segment.transition_angle);
 region = transition_region(plv_grid, wl, dl_grid, segment.density, k, segment_props.base_drag_coefficient, rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, next_segment.velocity, segment.transition_angle);
 
-power = max_power(network);
+power = network_max_power(network);
 
 function [constraint, region, power] = vertical_climb(plv_grid, dl_grid, dl, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
@@ -183,7 +172,7 @@ rotor = find_by_type(network, 'driver.rotor');
 constraint = vertical_climb_constraint(dl, segment.density(1), rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, segment.velocity);
 region = vertical_climb_region(plv_grid, dl_grid, segment.density(1), rotor.tip_velocity, rotor.rotor_solidity, rotor.base_drag_coefficient, rotor.induced_power_factor, segment.velocity);
 
-power = max_power(network);
+power = network_max_power(network);
 
 function [constraint, region, power] = climb(plf_grid, wl_grid, wl, k, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
@@ -199,7 +188,7 @@ elseif is_type(engine, 'engine.prop')
     region = climb_region_prop(plf_grid, wl_grid, segment.density(1), segment.velocity, segment_props.base_drag_coefficient, k, segment.angle, prop.efficiency);
 end
 
-power = max_power(network);
+power = network_max_power(network);
 
 function [range_constraint, cruise_speed_constraint, region, power] = cruise(plf_grid, wl_grid, wl, k, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
@@ -223,7 +212,7 @@ end
 
 region = range_region .* cruise_speed_region;
 
-power = max_power(network);
+power = network_max_power(network);
 
 function [constraint, region, power] = loiter(wl_grid, k, segment, vehicle, energy)
 network = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
@@ -238,7 +227,7 @@ elseif is_type(engine, 'engine.prop')
     region = endurance_region_prop(wl_grid, segment.density, segment.velocity, segment_props.base_drag_coefficient, k);
 end
 
-power = max_power(network);
+power = network_max_power(network);
 
 function k = k_parameter(vehicle)
 c = find_by_type(vehicle.components, 'wing.main');
