@@ -78,7 +78,7 @@ global constants;
 [source, source_id] = find_by_type(network, 'energy');
 
 if is_type(source, 'energy.fuel')
-    errordlg('Hover not available for fuel energy types'); % NOT AVAILABLE
+    errordlg('Hover not available for fuel energy sources'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
     rotor = find_by_type(network, 'driver.rotor');
@@ -103,7 +103,7 @@ if is_type(source, 'energy.fuel')
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
-    errordlg('Climb not available for electric energy types'); % NOT AVAILABLE
+    errordlg('Climb not available for electric energy sources'); % NOT AVAILABLE
     return;
 end
 
@@ -114,7 +114,7 @@ global constants;
 [source, source_id] = find_by_type(network, 'energy');
 
 if is_type(source, 'energy.fuel')
-    errordlg('Vertical climb not available for fuel energy types'); % NOT AVAILABLE
+    errordlg('Vertical climb not available for fuel energy sources'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
     rotor = find_by_type(network, 'driver.rotor');
@@ -144,7 +144,7 @@ if is_type(source, 'energy.fuel')
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
-    errordlg('Acceleration not available for electric energy types'); % NOT AVAILABLE
+    errordlg('Acceleration not available for electric energy sources'); % NOT AVAILABLE
     return;
 end
 
@@ -154,10 +154,10 @@ global constants;
 [network, network_ids] = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 [source, source_id] = find_by_type(network, 'energy');
 
-if is_type(source, 'energy.fuel')
-    engine = find_by_type(network, 'engine');
-    ld = get_ld(vehicle, segment, engine);
+engine = find_by_type(network, 'engine');
+ld = get_ld(vehicle, segment, engine);
 
+if is_type(source, 'energy.fuel')
     if is_type(engine, 'engine.jet')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
@@ -168,8 +168,13 @@ if is_type(source, 'energy.fuel')
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
-    mf_batt = segment.range * constants.g / source.specific_energy / network_efficiency(network) / ld;
-    vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
+    if is_type(engine, 'engine.prop')
+        mf_batt = segment.range * constants.g / source.specific_energy / network_efficiency(network) / ld;
+        vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
+    elseif is_type(engine, 'engine.jet')
+        errordlg('Jet engine not available for electric energy sources'); % NOT AVAILABLE
+        return;
+    end
 end
 
 
@@ -179,10 +184,10 @@ global constants;
 [network, network_ids] = find_network_components(vehicle, find_by_name(energy.networks, segment.energy_network));
 [source, source_id] = find_by_type(network, 'energy');
 
-if is_type(source, 'energy.fuel')
-    engine = find_by_type(network, 'engine');
-    ld = get_ld(vehicle, segment, engine);
+engine = find_by_type(network, 'engine');
+ld = get_ld(vehicle, segment, engine);
 
+if is_type(source, 'energy.fuel')
     if is_type(engine, 'engine.jet')
         mf_fuel = breguet(segment.range, segment.velocity, engine.specific_fuel_consumption, ld);
     elseif is_type(engine, 'engine.prop')
@@ -193,8 +198,13 @@ if is_type(source, 'energy.fuel')
     vehicle.components{network_ids(source_id)}.mass = source.mass + mf_fuel * vehicle.mass;
     vehicle.mass = vehicle.mass - vehicle.components{network_ids(source_id)}.mass;
 elseif is_type(source, 'energy.electric')
-    mf_batt = segment.time * segment.velocity * constants.g / source.specific_energy / network_efficiency(network) / ld;
-    vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
+    if is_type(engine, 'engine.prop')
+        mf_batt = segment.time * segment.velocity * constants.g / source.specific_energy / network_efficiency(network) / ld;
+        vehicle.components{network_ids(source_id)}.mass = source.mass + mf_batt * vehicle.mass;
+    elseif is_type(engine, 'engine.jet')
+        errordlg('Jet engine not available for electric energy sources'); % NOT AVAILABLE
+        return;
+    end
 end
 
 function vehicle = descent(segment, vehicle, energy)
@@ -218,7 +228,7 @@ rotor = find_by_type(network, 'driver.rotor');
 altitude_range = abs(segment.altitude(2) - segment.altitude(1));
 
 if is_type(source, 'energy.fuel')
-    errordlg('Vertical descent not available for fuel energy types'); % NOT AVAILABLE
+    errordlg('Vertical descent not available for fuel energy sources'); % NOT AVAILABLE
     return;
 elseif is_type(source, 'energy.electric')
     dl = vehicle.mass * constants.g / rotor_area(rotor);
@@ -254,8 +264,6 @@ function vehicle = load_step(vehicle, segment)
 vehicle.mass = vehicle.mass + segment.mass;
 
 function [error, mission, vehicle] = mtow_error(x, mission, vehicle, energy)
-global constants;
-
 vehicle.mass = x;
 
 % Calculate empty weight

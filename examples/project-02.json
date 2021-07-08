@@ -257,7 +257,7 @@
             },
             {
                 "name": "Electric Motor",
-                "type": "engine.electric",
+                "type": "engine.prop",
                 "number": 3,
                 "efficiency": 0.97,
                 "mass": 0,
